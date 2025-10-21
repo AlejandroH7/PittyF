@@ -5,6 +5,10 @@ import 'package:pittyf/presentation/screens/clients_list_screen.dart';
 import 'package:pittyf/presentation/screens/client_form_screen.dart';
 import 'package:pittyf/presentation/screens/client_detail_screen.dart';
 import 'package:pittyf/presentation/screens/client_edit_screen.dart';
+import 'package:pittyf/presentation/screens/desserts_list_screen.dart';
+import 'package:pittyf/presentation/screens/dessert_detail_screen.dart';
+import 'package:pittyf/presentation/screens/dessert_form_screen.dart';
+import 'package:pittyf/presentation/screens/dessert_edit_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,13 +32,16 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const Center(child: Text('Home Screen Placeholder')), // Placeholder for home screen
         MainMenuScreen.routeName: (context) => const MainMenuScreen(),
         ClientsListScreen.routeName: (context) => const ClientsListScreen(),
-        '/postres': (context) => const Center(child: Text('Postres Screen Placeholder')),
+        DessertsListScreen.routeName: (context) => const DessertsListScreen(),
         '/ingredientes': (context) => const Center(child: Text('Ingredientes Screen Placeholder')),
         '/pedidos': (context) => const Center(child: Text('Pedidos Screen Placeholder')),
         '/eventos': (context) => const Center(child: Text('Eventos Screen Placeholder')),
         ClientFormScreen.routeName: (context) => const ClientFormScreen(),
         ClientDetailScreen.routeName: (context) => const ClientDetailScreen(),
         ClientEditScreen.routeName: (context) => const ClientEditScreen(),
+        DessertDetailScreen.routeName: (context) => const DessertDetailScreen(),
+        DessertFormScreen.routeName: (context) => const DessertFormScreen(),
+        DessertEditScreen.routeName: (context) => const DessertEditScreen(),
       },
     );
   }

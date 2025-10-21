@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:pittyf/data/models/client_model.dart';
-import 'package:pittyf/data/services/clients_api.dart';
+import 'package:pittyf/data/models/dessert_model.dart';
+import 'package:pittyf/data/services/desserts_api.dart';
+import 'package:pittyf/presentation/screens/dessert_edit_screen.dart';
 
-class ClientDetailScreen extends StatefulWidget {
-  const ClientDetailScreen({super.key});
+class DessertDetailScreen extends StatefulWidget {
+  const DessertDetailScreen({super.key});
 
-  static const String routeName = '/clientes/detalle';
+  static const String routeName = '/postres/detalle';
 
   @override
-  State<ClientDetailScreen> createState() => _ClientDetailScreenState();
+  State<DessertDetailScreen> createState() => _DessertDetailScreenState();
 }
 
-class _ClientDetailScreenState extends State<ClientDetailScreen> {
-  late Future<ClientModel> _clientDetailFuture;
-  final ClientsApi _clientsApi = ClientsApi();
-  int? _clientId;
+class _DessertDetailScreenState extends State<DessertDetailScreen> {
+  late Future<DessertModel> _dessertDetailFuture;
+  final DessertsApi _dessertsApi = DessertsApi();
+  int? _dessertId;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _clientId = ModalRoute.of(context)?.settings.arguments as int?;
-    if (_clientId != null) {
-      _clientDetailFuture = _clientsApi.getClientById(_clientId!);
+    _dessertId = ModalRoute.of(context)?.settings.arguments as int?;
+    if (_dessertId != null) {
+      _dessertDetailFuture = _dessertsApi.getDessertById(_dessertId!);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_clientId == null) {
+    if (_dessertId == null) {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Error'),
@@ -35,13 +36,13 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
           foregroundColor: Colors.white,
         ),
         body: const Center(
-          child: Text('ID de cliente no proporcionado.'),
+          child: Text('ID de postre no proporcionado.'),
         ),
       );
     }
 
-    return FutureBuilder<ClientModel>(
-      future: _clientDetailFuture,
+    return FutureBuilder<DessertModel>(
+      future: _dessertDetailFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -71,14 +72,14 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
               foregroundColor: Colors.white,
             ),
             body: const Center(
-              child: Text('No se encontraron detalles del cliente.'),
+              child: Text('No se encontraron detalles del postre.'),
             ),
           );
         } else {
-          final client = snapshot.data!;
+          final dessert = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Detalle del Cliente'),
+              title: const Text('Detalle del Postre'),
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.white,
               actions: [
@@ -87,14 +88,14 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                   onPressed: () async {
                     final nav = Navigator.of(context); // Capture Navigator before async gap
                     final result = await nav.pushNamed(
-                      '/clientes/editar', // New route for editing
-                      arguments: client, // Pass the entire client object
+                      DessertEditScreen.routeName, // Navigate to the actual edit screen
+                      arguments: dessert, // Pass the entire dessert object
                     );
                     if (!mounted) return; // Check mounted after async gap
                     if (result == true) {
                       // If editing was successful, refresh the detail screen
                       setState(() {
-                        _clientDetailFuture = _clientsApi.getClientById(_clientId!); // Refresh data
+                        _dessertDetailFuture = _dessertsApi.getDessertById(_dessertId!); // Refresh data
                       });
                       // Also pop this screen with true to indicate a change to the previous screen
                       nav.pop(true);
@@ -109,7 +110,7 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Confirmar Eliminación'),
-                        content: Text('¿Estás seguro de que quieres eliminar a ${client.nombre}?'),
+                        content: Text('¿Estás seguro de que quieres eliminar a ${dessert.nombre}?'),
                         actions: [
                           TextButton(
                             onPressed: () => nav.pop(false), // Use captured nav
@@ -126,17 +127,17 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                     if (!mounted) return; // Check mounted after async gap
                     if (confirmDelete == true) {
                       try {
-                        await _clientsApi.deleteClient(client.id);
+                        await _dessertsApi.deleteDessert(dessert.id); // Need to add deleteDessert to DessertsApi
                         if (!mounted) return; // Check mounted after async gap
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Cliente eliminado exitosamente!')),
+                          const SnackBar(content: Text('Postre eliminado exitosamente!')),
                         );
-                        // Pop this screen with true to indicate a change to the previous screen (ClientsListScreen)
+                        // Pop this screen with true to indicate a change to the previous screen (DessertsListScreen)
                         nav.pop(true);
                       } catch (e) {
                         if (!mounted) return; // Check mounted after async gap
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error al eliminar cliente: $e')),
+                          SnackBar(content: Text('Error al eliminar postre: $e')),
                         );
                       }
                     }
@@ -149,14 +150,13 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailRow('ID:', client.id.toString()),
-                  _buildDetailRow('Nombre:', client.nombre),
-                  _buildDetailRow('Teléfono:', client.telefono ?? 'N/A'),
-                  _buildDetailRow('Notas:', client.notas ?? 'N/A'),
-                  _buildDetailRow('Fecha de Creación:', client.createdAt ?? 'N/A'),
-                  _buildDetailRow('Creado por:', client.createdBy ?? 'N/A'),
-                  _buildDetailRow('Última Actualización:', client.updatedAt ?? 'N/A'),
-                  _buildDetailRow('Actualizado por:', client.updatedBy ?? 'N/A'),
+                  _buildDetailRow('ID:', dessert.id.toString()),
+                  _buildDetailRow('Nombre:', dessert.nombre),
+                  _buildDetailRow('Precio:', '\$${dessert.precio.toStringAsFixed(2)}'),
+                  _buildDetailRow('Porciones:', dessert.porciones.toString()),
+                  _buildDetailRow('Activo:', dessert.activo ? 'Sí' : 'No'),
+                  _buildDetailRow('Fecha de Creación:', dessert.createdAt ?? 'N/A'),
+                  _buildDetailRow('Última Actualización:', dessert.updatedAt ?? 'N/A'),
                 ],
               ),
             ),
