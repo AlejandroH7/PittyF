@@ -34,7 +34,7 @@ class InicioScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/home');
+                      Navigator.of(context).pushReplacementNamed('/menu');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF8B0000), // Vino color
