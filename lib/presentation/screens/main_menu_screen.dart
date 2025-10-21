@@ -27,12 +27,7 @@ class MainMenuScreen extends StatelessWidget {
               Navigator.of(context).pushNamed('/postres');
             },
           ),
-          ListTile(
-            title: const Text('Ingredientes'),
-            onTap: () {
-              Navigator.of(context).pushNamed('/ingredientes');
-            },
-          ),
+
           ListTile(
             title: const Text('Pedidos'),
             onTap: () {

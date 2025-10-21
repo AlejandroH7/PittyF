@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:pittyf/data/models/dessert_model.dart';
 import 'package:pittyf/data/services/desserts_api.dart';
@@ -35,9 +36,7 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
         ),
-        body: const Center(
-          child: Text('ID de postre no proporcionado.'),
-        ),
+        body: const Center(child: Text('ID de postre no proporcionado.')),
       );
     }
 
@@ -60,9 +59,7 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.white,
             ),
-            body: Center(
-              child: Text('Error: ${snapshot.error}'),
-            ),
+            body: Center(child: Text('Error: ${snapshot.error}')),
           );
         } else if (!snapshot.hasData) {
           return Scaffold(
@@ -88,14 +85,17 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
                   onPressed: () async {
                     final nav = Navigator.of(context); // Capture Navigator before async gap
                     final result = await nav.pushNamed(
-                      DessertEditScreen.routeName, // Navigate to the actual edit screen
+                      DessertEditScreen
+                          .routeName, // Navigate to the actual edit screen
                       arguments: dessert, // Pass the entire dessert object
                     );
                     if (!mounted) return; // Check mounted after async gap
                     if (result == true) {
                       // If editing was successful, refresh the detail screen
                       setState(() {
-                        _dessertDetailFuture = _dessertsApi.getDessertById(_dessertId!); // Refresh data
+                        _dessertDetailFuture = _dessertsApi.getDessertById(
+                          _dessertId!,
+                        ); // Refresh data
                       });
                       // Also pop this screen with true to indicate a change to the previous screen
                       nav.pop(true);
@@ -106,38 +106,59 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
                   icon: const Icon(Icons.delete),
                   onPressed: () async {
                     final nav = Navigator.of(context); // Capture Navigator before async gap
+                    final messenger = ScaffoldMessenger.of(context); // Capture ScaffoldMessenger before async gap
                     final bool? confirmDelete = await showDialog<bool>(
                       context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Confirmar Eliminación'),
-                        content: Text('¿Estás seguro de que quieres eliminar a ${dessert.nombre}?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => nav.pop(false), // Use captured nav
-                            child: const Text('Cancelar'),
+                      builder:
+                          (context) => AlertDialog(
+                            title: const Text('Confirmar Eliminación'),
+                            content: Text(
+                              '¿Estás seguro de que quieres eliminar a ${dessert.nombre}?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed:
+                                    () => nav.pop(false), // Use captured nav
+                                child: const Text('Cancelar'),
+                              ),
+                              TextButton(
+                                onPressed:
+                                    () => nav.pop(true), // Use captured nav
+                                child: const Text('Eliminar'),
+                              ),
+                            ],
                           ),
-                          TextButton(
-                            onPressed: () => nav.pop(true), // Use captured nav
-                            child: const Text('Eliminar'),
-                          ),
-                        ],
-                      ),
                     );
 
                     if (!mounted) return; // Check mounted after async gap
                     if (confirmDelete == true) {
                       try {
-                        await _dessertsApi.deleteDessert(dessert.id); // Need to add deleteDessert to DessertsApi
+                        await _dessertsApi.deleteDessert(dessert.id);
                         if (!mounted) return; // Check mounted after async gap
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Postre eliminado exitosamente!')),
+                        messenger.showSnackBar(
+                          const SnackBar(
+                            content: Text('Postre eliminado exitosamente!'),
+                          ),
                         );
                         // Pop this screen with true to indicate a change to the previous screen (DessertsListScreen)
                         nav.pop(true);
+                      } on DioException catch (e) {
+                        if (!mounted) return; // Check mounted after async gap
+                        // print('DioException caught: ${e.runtimeType}, Status Code: ${e.response?.statusCode}, Message: ${e.message}'); // Log details removed
+                        if (e.response?.statusCode == 409) {
+                          messenger.showSnackBar(
+                            const SnackBar(content: Text('Este postre no se puede eliminar porque pertenece a un pedido.')),
+                          );
+                        } else {
+                          messenger.showSnackBar(
+                            SnackBar(content: Text('Error al eliminar postre: ${e.message}')),
+                          );
+                        }
                       } catch (e) {
                         if (!mounted) return; // Check mounted after async gap
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error al eliminar postre: $e')),
+                        // print('Unexpected error caught: ${e.runtimeType}, Message: $e'); // Log details removed
+                        messenger.showSnackBar(
+                          SnackBar(content: Text('Error inesperado al eliminar postre: $e')),
                         );
                       }
                     }
@@ -152,11 +173,20 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
                 children: [
                   _buildDetailRow('ID:', dessert.id.toString()),
                   _buildDetailRow('Nombre:', dessert.nombre),
-                  _buildDetailRow('Precio:', '\$${dessert.precio.toStringAsFixed(2)}'),
+                  _buildDetailRow(
+                    'Precio:',
+                    '\$${dessert.precio.toStringAsFixed(2)}',
+                  ),
                   _buildDetailRow('Porciones:', dessert.porciones.toString()),
                   _buildDetailRow('Activo:', dessert.activo ? 'Sí' : 'No'),
-                  _buildDetailRow('Fecha de Creación:', dessert.createdAt ?? 'N/A'),
-                  _buildDetailRow('Última Actualización:', dessert.updatedAt ?? 'N/A'),
+                  _buildDetailRow(
+                    'Fecha de Creación:',
+                    dessert.createdAt ?? 'N/A',
+                  ),
+                  _buildDetailRow(
+                    'Última Actualización:',
+                    dessert.updatedAt ?? 'N/A',
+                  ),
                 ],
               ),
             ),
@@ -174,13 +204,12 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          Text(value, style: Theme.of(context).textTheme.bodyLarge),
         ],
       ),
     );

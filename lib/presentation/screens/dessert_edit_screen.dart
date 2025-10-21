@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart' show DioException;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pittyf/data/models/dessert_model.dart';
@@ -96,18 +97,38 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
           const SnackBar(content: Text('Postre actualizado exitosamente!')),
         );
         success = true;
+      } on DioException catch (e) {
+        // Catch DioException specifically
+        if (!mounted) return; // Check mounted after async gap
+        // print('DioException caught: ${e.runtimeType}, Status Code: ${e.response?.statusCode}, Message: ${e.message}'); // Log details removed
+        if (e.response?.statusCode == 409) {
+          messenger.showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Este postre no se puede editar porque pertenece a un pedido.',
+              ),
+            ),
+          );
+        } else {
+          messenger.showSnackBar(
+            SnackBar(content: Text('Error al actualizar postre: ${e.message}')),
+          );
+        }
       } catch (e) {
-        if (!mounted) return;
+        if (!mounted) return; // Check mounted after async gap
+        // print('Unexpected error caught: ${e.runtimeType}, Message: $e'); // Log details removed
         messenger.showSnackBar(
-          SnackBar(content: Text('Error al actualizar postre: $e')),
+          SnackBar(content: Text('Error inesperado al actualizar postre: $e')),
         );
       } finally {
-        if (!mounted) return;
+        if (!mounted) return; // Check mounted after async gap
         setState(() {
           _isLoading = false;
         });
         if (success) {
-          nav.pop(true);
+          nav.pop(
+            true,
+          ); // Pop with true to indicate success and trigger refresh
         }
       }
     }
