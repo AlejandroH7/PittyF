@@ -11,6 +11,14 @@ import 'package:pittyf/presentation/screens/dessert_form_screen.dart';
 import 'package:pittyf/presentation/screens/dessert_edit_screen.dart';
 import 'package:pittyf/presentation/screens/pedidos_list_screen.dart';
 import 'package:pittyf/presentation/screens/pedido_detail_screen.dart'; // Import PedidoDetailScreen
+import 'package:pittyf/presentation/screens/pedido_completo_list_screen.dart';
+import 'package:pittyf/presentation/screens/pedido_completo_detail_screen.dart';
+import 'package:pittyf/presentation/screens/pedido_completo_form_screen.dart';
+import 'package:pittyf/presentation/screens/pedido_completo_edit_screen.dart';
+import 'package:pittyf/presentation/screens/events_list_screen.dart';
+import 'package:pittyf/presentation/screens/event_form_screen.dart';
+import 'package:pittyf/presentation/screens/event_edit_screen.dart';
+import 'package:pittyf/presentation/screens/event_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,7 +44,14 @@ class MyApp extends StatelessWidget {
         ClientsListScreen.routeName: (context) => const ClientsListScreen(),
         DessertsListScreen.routeName: (context) => const DessertsListScreen(),
         PedidosListScreen.routeName: (context) => const PedidosListScreen(),
-        '/eventos': (context) => const Center(child: Text('Eventos Screen Placeholder')),
+        PedidoCompletoListScreen.routeName: (context) => const PedidoCompletoListScreen(),
+        PedidoCompletoDetailScreen.routeName: (context) => const PedidoCompletoDetailScreen(),
+        PedidoCompletoFormScreen.routeName: (context) => const PedidoCompletoFormScreen(),
+        PedidoCompletoEditScreen.routeName: (context) => const PedidoCompletoEditScreen(),
+        EventsListScreen.routeName: (context) => const EventsListScreen(),
+        EventFormScreen.routeName: (context) => const EventFormScreen(),
+        EventEditScreen.routeName: (context) => const EventEditScreen(),
+        EventDetailScreen.routeName: (context) => const EventDetailScreen(),
         ClientFormScreen.routeName: (context) => const ClientFormScreen(),
         ClientDetailScreen.routeName: (context) => const ClientDetailScreen(),
         ClientEditScreen.routeName: (context) => const ClientEditScreen(),

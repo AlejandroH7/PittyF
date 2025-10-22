@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pittyf/data/models/pedido_model.dart';
 import 'package:pittyf/data/services/pedidos_api.dart';
-import 'package:pittyf/presentation/screens/pedidos_form_screen.dart';
 import 'package:pittyf/presentation/screens/pedido_detail_screen.dart';
 
 class PedidosListScreen extends StatefulWidget {

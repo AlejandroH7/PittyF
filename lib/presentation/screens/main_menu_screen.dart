@@ -31,7 +31,7 @@ class MainMenuScreen extends StatelessWidget {
           ListTile(
             title: const Text('Pedidos'),
             onTap: () {
-              Navigator.of(context).pushNamed('/pedidos');
+              Navigator.of(context).pushNamed('/pedidos-completos');
             },
           ),
           ListTile(
