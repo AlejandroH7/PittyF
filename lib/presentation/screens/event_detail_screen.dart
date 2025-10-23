@@ -147,8 +147,16 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         }
                       } on DioException catch (e) {
                         if (mounted) {
+                          String errorMessage = 'Error desconocido';
+                          if (e.response?.statusCode == 409) {
+                            if (e.response?.data is Map<String, dynamic> && e.response?.data['message'] != null) {
+                              errorMessage = e.response!.data['message'];
+                            }
+                          } else {
+                            errorMessage = 'Error al eliminar evento: ${e.message}';
+                          }
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error al eliminar: $e')),
+                            SnackBar(content: Text(errorMessage)),
                           );
                         }
                       } catch (e) {

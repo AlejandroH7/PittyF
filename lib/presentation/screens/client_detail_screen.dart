@@ -150,11 +150,13 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                         // Catch DioException specifically
                         if (!mounted) return; // Check mounted after async gap
                         if (e.response?.statusCode == 409) {
+                          String errorMessage = 'Error desconocido';
+                          if (e.response?.data is Map<String, dynamic> && e.response?.data['message'] != null) {
+                            errorMessage = e.response!.data['message'];
+                          }
                           messenger.showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Este cliente no se puede eliminar porque tiene pedidos asociados.',
-                              ),
+                            SnackBar(
+                              content: Text(errorMessage),
                             ),
                           );
                         } else {

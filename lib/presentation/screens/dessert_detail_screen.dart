@@ -146,12 +146,20 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
                         if (!mounted) return; // Check mounted after async gap
                         // print('DioException caught: ${e.runtimeType}, Status Code: ${e.response?.statusCode}, Message: ${e.message}'); // Log details removed
                         if (e.response?.statusCode == 409) {
+                          String errorMessage = 'Error desconocido';
+                          if (e.response?.data is Map<String, dynamic> && e.response?.data['message'] != null) {
+                            errorMessage = e.response!.data['message'];
+                          }
                           messenger.showSnackBar(
-                            const SnackBar(content: Text('Este postre no se puede eliminar porque pertenece a un pedido.')),
+                            SnackBar(
+                              content: Text(errorMessage),
+                            ),
                           );
                         } else {
                           messenger.showSnackBar(
-                            SnackBar(content: Text('Error al eliminar postre: ${e.message}')),
+                            SnackBar(
+                              content: Text('Error al eliminar postre: ${e.message}'),
+                            ),
                           );
                         }
                       } catch (e) {
