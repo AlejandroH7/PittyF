@@ -18,6 +18,7 @@ PedidoCompletoModel _$PedidoCompletoModelFromJson(Map<String, dynamic> json) =>
       total: (json['total'] as num).toDouble(),
       fechaEntrega: json['fechaEntrega'] as String,
       createdAt: json['createdAt'] as String,
+      updatedAt: json['updatedAt'] as String?,
     );
 
 Map<String, dynamic> _$PedidoCompletoModelToJson(
@@ -33,4 +34,5 @@ Map<String, dynamic> _$PedidoCompletoModelToJson(
   'total': instance.total,
   'fechaEntrega': instance.fechaEntrega,
   'createdAt': instance.createdAt,
+  'updatedAt': instance.updatedAt,
 };

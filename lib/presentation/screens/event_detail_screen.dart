@@ -102,6 +102,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       setState(() {
                         _eventDetailFuture = _eventsApi.getEventById(_eventId!);
                       });
+                      Navigator.of(context).pop(true); // Signal list screen to refresh
                     }
                   },
                 ),

@@ -21,13 +21,26 @@ class _EventsListScreenState extends State<EventsListScreen> {
   @override
   void initState() {
     super.initState();
-    _eventsFuture = _eventsApi.getAllEvents();
+    _eventsFuture = _refreshEvents(); // Initialize by calling refresh
   }
 
-  Future<void> _refreshEvents() async {
+  Future<List<EventModel>> _refreshEvents() async {
+    final fetchedEvents = await _eventsApi.getAllEvents();
     setState(() {
-      _eventsFuture = _eventsApi.getAllEvents();
+      fetchedEvents.sort((a, b) {
+        // Prioritize updatedAt, then createdAt
+        final dateA = DateTime.tryParse(a.updatedAt ?? a.createdAt ?? '');
+        final dateB = DateTime.tryParse(b.updatedAt ?? b.createdAt ?? '');
+
+        if (dateA == null && dateB == null) return 0;
+        if (dateA == null) return 1; // Null dates come last
+        if (dateB == null) return -1; // Null dates come last
+
+        return dateB.compareTo(dateA); // Descending order (most recent first)
+      });
+      _eventsFuture = Future.value(fetchedEvents); // Update the future with the fetched data
     });
+    return fetchedEvents;
   }
 
   String _formatDate(String dateString) {
@@ -104,11 +117,14 @@ class _EventsListScreenState extends State<EventsListScreen> {
                         '${event.nombre} - ${_formatDate(event.fecha)} - ${event.ubicacion ?? 'N/A'}',
                       ),
                       trailing: Text('ID: ${event.id}'),
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
+                      onTap: () async {
+                        final result = await Navigator.of(context).pushNamed(
                           EventDetailScreen.routeName,
                           arguments: event.id,
                         );
+                        if (result == true) {
+                          await _refreshEvents(); // Await the refresh
+                        }
                       },
                     ),
                   );
@@ -124,7 +140,7 @@ class _EventsListScreenState extends State<EventsListScreen> {
             context,
           ).pushNamed('/eventos/nuevo');
           if (result == true) {
-            _refreshEvents();
+            await _refreshEvents(); // Await the refresh
           }
         },
         child: const Icon(Icons.add),

@@ -15,6 +15,7 @@ class PedidoCompletoModel {
   final double total;
   final String fechaEntrega;
   final String createdAt;
+  final String? updatedAt;
 
   PedidoCompletoModel({
     required this.id,
@@ -27,6 +28,7 @@ class PedidoCompletoModel {
     required this.total,
     required this.fechaEntrega,
     required this.createdAt,
+    this.updatedAt,
   });
 
   factory PedidoCompletoModel.fromJson(Map<String, dynamic> json) => _$PedidoCompletoModelFromJson(json);

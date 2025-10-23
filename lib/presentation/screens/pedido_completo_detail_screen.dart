@@ -90,6 +90,7 @@ class _PedidoCompletoDetailScreenState
                           _pedidoId!,
                         );
                       });
+                      Navigator.of(context).pop(true); // Signal list screen to refresh
                     }
                   },
                 ),

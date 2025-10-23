@@ -187,7 +187,14 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                      if (value == null || value.isEmpty) return 'Ingrese una cantidad';
                     final cantidad = int.tryParse(value);
                     if (cantidad == null || cantidad <= 0) return 'Debe ser un número positivo';
-                    // Note: Stock validation on edit is complex and omitted as per user request simplicity
+
+                    if (_selectedPostre != null && _pedido != null) {
+                      // Calculate effective available stock: current stock + quantity of this specific pedido
+                      final effectiveAvailableStock = _selectedPostre!.porciones + _pedido!.cantidad;
+                      if (cantidad > effectiveAvailableStock) {
+                        return 'Stock insuficiente. Disponibles: ${effectiveAvailableStock}';
+                      }
+                    }
                     return null;
                   },
                 ),
