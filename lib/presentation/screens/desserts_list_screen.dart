@@ -45,8 +45,6 @@ class _DessertsListScreenState extends State<DessertsListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Postres'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
       ),
       body: FutureBuilder<List<DessertModel>>(
         future: _dessertsFuture,

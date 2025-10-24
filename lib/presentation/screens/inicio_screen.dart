@@ -18,7 +18,6 @@ class InicioScreen extends StatelessWidget {
                 Text(
                   'Bienvenido a Pitty',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: const Color(0xFF8B0000), // Vino color
                         fontWeight: FontWeight.bold,
                       ),
                   textAlign: TextAlign.center,
@@ -37,8 +36,6 @@ class InicioScreen extends StatelessWidget {
                       Navigator.of(context).pushReplacementNamed('/menu');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF8B0000), // Vino color
-                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
@@ -47,7 +44,7 @@ class InicioScreen extends StatelessWidget {
                     child: Text(
                       'Iniciar',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.bold,
                           ),
                     ),

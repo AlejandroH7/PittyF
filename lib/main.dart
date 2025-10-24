@@ -33,7 +33,27 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pitty App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8B0000)), // Wine color
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF66001F), // Burgundy
+          primary: const Color(0xFF66001F), // Burgundy
+          secondary: const Color(0xFFFEFCEF), // Cream
+          background: const Color(0xFFFEFCEF), // Cream
+        ),
+        scaffoldBackgroundColor: const Color(0xFFFEFCEF), // Cream
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF66001F), // Burgundy
+          foregroundColor: Color(0xFFFEFCEF), // Cream for text/icons
+        ),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Color(0xFF66001F)),
+          bodyMedium: TextStyle(color: Color(0xFF66001F)),
+          displayLarge: TextStyle(color: Color(0xFF66001F)),
+          displayMedium: TextStyle(color: Color(0xFF66001F)),
+          displaySmall: TextStyle(color: Color(0xFF66001F)),
+          headlineMedium: TextStyle(color: Color(0xFF66001F)),
+          headlineSmall: TextStyle(color: Color(0xFF66001F)),
+          titleLarge: TextStyle(color: Color(0xFF66001F)),
+        ),
         useMaterial3: true,
       ),
       initialRoute: InicioScreen.routeName,

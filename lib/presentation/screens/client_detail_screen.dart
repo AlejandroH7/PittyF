@@ -32,8 +32,6 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Error'),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Colors.white,
         ),
         body: const Center(child: Text('ID de cliente no proporcionado.')),
       );
@@ -46,8 +44,6 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Cargando...'),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Colors.white,
             ),
             body: const Center(child: CircularProgressIndicator()),
           );
@@ -55,8 +51,6 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Error'),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Colors.white,
             ),
             body: Center(child: Text('Error: ${snapshot.error}')),
           );
@@ -64,8 +58,6 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('No encontrado'),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Colors.white,
             ),
             body: const Center(
               child: Text('No se encontraron detalles del cliente.'),
@@ -76,8 +68,6 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Detalle del Cliente'),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Colors.white,
               actions: [
                 IconButton(
                   icon: const Icon(Icons.edit),
