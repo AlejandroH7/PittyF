@@ -17,7 +17,7 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
   final _nombreController = TextEditingController();
   final _precioController = TextEditingController();
   final _porcionesController = TextEditingController();
-  bool _activo = true; // Default to true as per backend @NotNull
+  bool _activo = true;
   final DessertsApi _dessertsApi = DessertsApi();
   bool _isLoading = false;
 
@@ -31,9 +31,7 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
 
   Future<void> _saveDessert() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() => _isLoading = true);
 
       final dessertRequest = DessertRequestModel(
         nombre: _nombreController.text,
@@ -42,33 +40,23 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
         activo: _activo,
       );
 
-      bool success = false;
-      final nav = Navigator.of(context); // Capture Navigator before async gap
-      final messenger = ScaffoldMessenger.of(
-        context,
-      ); // Capture ScaffoldMessenger before async gap
-
       try {
         await _dessertsApi.createDessert(dessertRequest);
-        if (!mounted) return; // Check mounted after async gap
-        messenger.showSnackBar(
-          const SnackBar(content: Text('Postre creado exitosamente!')),
-        );
-        success = true;
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Postre creado exitosamente!'), backgroundColor: Colors.green),
+          );
+          Navigator.of(context).pop(true);
+        }
       } catch (e) {
-        if (!mounted) return; // Check mounted after async gap
-        messenger.showSnackBar(
-          SnackBar(content: Text('Error al crear postre: $e')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error al crear postre: $e'), backgroundColor: Colors.red),
+          );
+        }
       } finally {
-        if (!mounted) return; // Check mounted after async gap
-        setState(() {
-          _isLoading = false;
-        });
-        if (success) {
-          nav.pop(
-            true,
-          ); // Pop with true to indicate success and trigger refresh
+        if (mounted) {
+          setState(() => _isLoading = false);
         }
       }
     }
@@ -76,142 +64,160 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryColor = Color(0xFFE91E63);
+    const Color backgroundColor = Color(0xFFFFF8E1);
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Crear Postre'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: const Text('Nuevo Postre', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              TextFormField(
-                controller: _nombreController,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa el nombre';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _precioController,
-                decoration: const InputDecoration(
-                  labelText: 'Precio',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                    RegExp(r'^\d+\.?\d{0,2}$'),
-                  ), // Allow decimal with 2 places
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa el precio';
-                  }
-                  if (double.tryParse(value) == null ||
-                      double.parse(value) <= 0) {
-                    return 'El precio debe ser un número mayor a 0';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _porcionesController,
-                decoration: const InputDecoration(
-                  labelText: 'Porciones',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly, // Only allow digits
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor ingresa las porciones';
-                  }
-                  if (int.tryParse(value) == null || int.parse(value) < 1) {
-                    return 'Las porciones deben ser al menos 1';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              SwitchListTile(
-                title: const Text('Activo'),
-                value: _activo,
-                onChanged: (bool value) {
-                  setState(() {
-                    _activo = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : SizedBox(
-                    height: 56,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _saveDessert,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        elevation: 5,
-                      ),
-                      child: Text(
-                        'Guardar',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 56,
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(
-                      context,
-                    ).pop(false); // Pop with false to indicate cancellation
+      body: Stack(
+        children: [
+          Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
+          Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+          Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: <Widget>[
+                const SizedBox(height: 16),
+                _buildTextFormField(
+                  controller: _nombreController,
+                  label: 'Nombre del Postre',
+                  icon: Icons.cake_outlined,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Por favor ingresa el nombre';
+                    return null;
                   },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Theme.of(context).colorScheme.primary,
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: Text(
-                    'Cancelar',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+                _buildTextFormField(
+                  controller: _precioController,
+                  label: 'Precio',
+                  icon: Icons.attach_money,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}$'))],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Por favor ingresa el precio';
+                    if (double.tryParse(value) == null || double.parse(value) <= 0) return 'El precio debe ser mayor a 0';
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+                _buildTextFormField(
+                  controller: _porcionesController,
+                  label: 'Porciones',
+                  icon: Icons.pie_chart_outline,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Por favor ingresa las porciones';
+                    if (int.tryParse(value) == null || int.parse(value) < 1) return 'Las porciones deben ser al menos 1';
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+                _buildSwitchTile(),
+                const SizedBox(height: 32),
+                if (_isLoading)
+                  const Center(child: CircularProgressIndicator(color: primaryColor))
+                else
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.save_alt_outlined),
+                          onPressed: _saveDessert,
+                          label: const Text('Guardar Postre'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                            elevation: 8,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Cancelar', style: TextStyle(color: primaryColor)),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildSwitchTile() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15.0),
+        border: Border.all(color: Colors.grey.shade300, width: 1.0),
+      ),
+      child: SwitchListTile(
+        title: const Text('Postre Activo', style: TextStyle(fontWeight: FontWeight.w500)),
+        subtitle: Text(_activo ? 'Visible para pedidos' : 'Oculto para pedidos', style: const TextStyle(color: Colors.grey)),
+        value: _activo,
+        onChanged: (bool value) => setState(() => _activo = value),
+        activeColor: const Color(0xFFE91E63),
+        secondary: const Icon(Icons.visibility_outlined, color: Color(0xFFE91E63)),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: const Color(0xFFE91E63)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          borderSide: const BorderSide(color: Color(0xFFE91E63), width: 2.0),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+    );
+  }
+}
+
+class _Circle extends StatelessWidget {
+  final Color color;
+  final double size;
+  const _Circle({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

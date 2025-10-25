@@ -33,21 +33,30 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Pitty App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8B0000)), // Wine color
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF8B0000),
+        ), // Wine color
         useMaterial3: true,
       ),
       initialRoute: InicioScreen.routeName,
       routes: {
         InicioScreen.routeName: (context) => const InicioScreen(),
-        '/home': (context) => const Center(child: Text('Home Screen Placeholder')), // Placeholder for home screen
+        '/home':
+            (context) => const Center(
+              child: Text('Home Screen Placeholder'),
+            ), // Placeholder for home screen
         MainMenuScreen.routeName: (context) => const MainMenuScreen(),
         ClientsListScreen.routeName: (context) => const ClientsListScreen(),
         DessertsListScreen.routeName: (context) => const DessertsListScreen(),
         PedidosListScreen.routeName: (context) => const PedidosListScreen(),
-        PedidoCompletoListScreen.routeName: (context) => const PedidoCompletoListScreen(),
-        PedidoCompletoDetailScreen.routeName: (context) => const PedidoCompletoDetailScreen(),
-        PedidoCompletoFormScreen.routeName: (context) => const PedidoCompletoFormScreen(),
-        PedidoCompletoEditScreen.routeName: (context) => const PedidoCompletoEditScreen(),
+        PedidoCompletoListScreen.routeName:
+            (context) => const PedidoCompletoListScreen(),
+        PedidoCompletoDetailScreen.routeName:
+            (context) => const PedidoCompletoDetailScreen(),
+        PedidoCompletoFormScreen.routeName:
+            (context) => const PedidoCompletoFormScreen(),
+        PedidoCompletoEditScreen.routeName:
+            (context) => const PedidoCompletoEditScreen(),
         EventsListScreen.routeName: (context) => const EventsListScreen(),
         EventFormScreen.routeName: (context) => const EventFormScreen(),
         EventEditScreen.routeName: (context) => const EventEditScreen(),
@@ -58,7 +67,9 @@ class MyApp extends StatelessWidget {
         DessertDetailScreen.routeName: (context) => const DessertDetailScreen(),
         DessertFormScreen.routeName: (context) => const DessertFormScreen(),
         DessertEditScreen.routeName: (context) => const DessertEditScreen(),
-        PedidoDetailScreen.routeName: (context) => const PedidoDetailScreen(), // Add PedidoDetailScreen route
+        PedidoDetailScreen.routeName:
+            (context) =>
+                const PedidoDetailScreen(), // Add PedidoDetailScreen route
       },
     );
   }

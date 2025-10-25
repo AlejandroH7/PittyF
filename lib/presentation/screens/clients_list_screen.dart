@@ -19,116 +19,223 @@ class _ClientsListScreenState extends State<ClientsListScreen> {
   @override
   void initState() {
     super.initState();
-    _clientsFuture = _clientsApi.getAllClients();
+    _clientsFuture = _getSortedClients();
+  }
+
+  Future<List<ClientModel>> _getSortedClients() async {
+    final clients = await _clientsApi.getAllClients();
+    clients.sort((a, b) {
+      final dateA = DateTime.tryParse(a.updatedAt ?? a.createdAt ?? '');
+      final dateB = DateTime.tryParse(b.updatedAt ?? b.createdAt ?? '');
+      if (dateA == null && dateB == null) return 0;
+      if (dateA == null) return 1;
+      if (dateB == null) return -1;
+      return dateB.compareTo(dateA);
+    });
+    return clients;
   }
 
   Future<void> _refreshClients() async {
     setState(() {
-      _clientsFuture = _clientsApi.getAllClients().then((clients) {
-        clients.sort((a, b) {
-          // Prioritize updatedAt, then createdAt
-          final dateA = DateTime.tryParse(a.updatedAt ?? a.createdAt ?? '');
-          final dateB = DateTime.tryParse(b.updatedAt ?? b.createdAt ?? '');
-
-          if (dateA == null && dateB == null) return 0;
-          if (dateA == null) return 1; // Null dates come last
-          if (dateB == null) return -1; // Null dates come last
-
-          return dateB.compareTo(dateA); // Descending order (most recent first)
-        });
-        return clients;
-      });
+      _clientsFuture = _getSortedClients();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryColor = Color(0xFFE91E63);
+    const Color accentColor = Color(0xFFFFC107);
+    const Color backgroundColor = Color(0xFFFFF8E1);
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Lista de Clientes'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: const Text('Clientes', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: FutureBuilder<List<ClientModel>>(
-        future: _clientsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Error: ${snapshot.error}'),
-                  ElevatedButton(
-                    onPressed: _refreshClients,
-                    child: const Text('Reintentar'),
+      body: Stack(
+        children: [
+          Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
+          Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+          FutureBuilder<List<ClientModel>>(
+            future: _clientsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator(color: primaryColor));
+              } else if (snapshot.hasError) {
+                return _ErrorState(errorMessage: snapshot.error.toString(), onRetry: _refreshClients);
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return _EmptyState(onRefresh: _refreshClients);
+              } else {
+                return RefreshIndicator(
+                  onRefresh: _refreshClients,
+                  color: primaryColor,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final client = snapshot.data![index];
+                      return _ClientCard(client: client, onTapped: () => _navigateToDetail(client.id));
+                    },
                   ),
-                ],
-              ),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('No hay clientes disponibles.'),
-                  ElevatedButton(
-                    onPressed: _refreshClients,
-                    child: const Text('Recargar'),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return RefreshIndicator(
-              onRefresh: _refreshClients,
-              child: ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  final client = snapshot.data![index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    elevation: 2,
-                    child: ListTile(
-                      title: Text(
-                        client.nombre,
-                      ), // Assuming nombre is always non-null as per backend @NotBlank
-                      subtitle: Text(
-                        client.telefono ?? 'N/A',
-                      ), // Handle nullable telefono
-                      trailing: Text('ID: ${client.id}'),
-                      onTap: () async {
-                        final result = await Navigator.of(context).pushNamed(
-                          '/clientes/detalle',
-                          arguments: client.id, // Pass the client ID
-                        );
-                        if (result == true) {
-                          _refreshClients(); // Refresh clients if an edit was successful
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            );
-          }
-        },
+                );
+              }
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await Navigator.of(
-            context,
-          ).pushNamed(ClientFormScreen.routeName);
-          if (result == true) {
-            _refreshClients(); // Refresh clients if a new one was added
-          }
-        },
-        child: const Icon(Icons.add),
+        onPressed: _navigateAndRefresh,
+        backgroundColor: accentColor,
+        child: const Icon(Icons.add, color: Colors.black),
       ),
+    );
+  }
+
+  void _navigateToDetail(int clientId) async {
+    final result = await Navigator.of(context).pushNamed(
+      '/clientes/detalle',
+      arguments: clientId,
+    );
+    if (result == true) {
+      _refreshClients();
+    }
+  }
+
+  void _navigateAndRefresh() async {
+    final result = await Navigator.of(context).pushNamed(ClientFormScreen.routeName);
+    if (result == true) {
+      _refreshClients();
+    }
+  }
+}
+
+class _ClientCard extends StatelessWidget {
+  final ClientModel client;
+  final VoidCallback onTapped;
+
+  const _ClientCard({required this.client, required this.onTapped});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: InkWell(
+        onTap: onTapped,
+        borderRadius: BorderRadius.circular(15),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 28,
+                backgroundColor: const Color(0xFFE91E63).withAlpha(30),
+                child: Text(
+                  client.nombre.isNotEmpty ? client.nombre[0].toUpperCase() : '?',
+                  style: const TextStyle(fontSize: 24, color: Color(0xFFE91E63), fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(client.nombre, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF333333))),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(Icons.phone, size: 16, color: Colors.grey),
+                        const SizedBox(width: 8),
+                        Text(client.telefono ?? 'Sin teléfono', style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: Colors.grey, size: 28),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ErrorState extends StatelessWidget {
+  final String errorMessage;
+  final VoidCallback onRetry;
+
+  const _ErrorState({required this.errorMessage, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, color: Colors.red, size: 50),
+            const SizedBox(height: 16),
+            const Text('Ocurrió un error', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(errorMessage, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Reintentar'),
+              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE91E63), foregroundColor: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  final VoidCallback onRefresh;
+
+  const _EmptyState({required this.onRefresh});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.people_outline, size: 60, color: Colors.grey),
+          const SizedBox(height: 16),
+          const Text('No hay clientes registrados', style: TextStyle(fontSize: 18, color: Colors.grey)),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: onRefresh,
+            icon: const Icon(Icons.add),
+            label: const Text('Agregar Cliente'),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE91E63), foregroundColor: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Circle extends StatelessWidget {
+  final Color color;
+  final double size;
+
+  const _Circle({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show TextInputFormatter;
 import 'package:intl/intl.dart';
 import 'package:pittyf/data/models/event_create_request_model.dart';
 import 'package:pittyf/data/services/events_api.dart';
@@ -67,6 +68,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
           content: Text(
             'Por favor, seleccione una fecha y hora para el evento.',
           ),
+          backgroundColor: Colors.red,
         ),
       );
       return;
@@ -94,15 +96,21 @@ class _EventFormScreenState extends State<EventFormScreen> {
       await EventsApi().createEvent(requestModel);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Evento creado exitosamente!')),
+          const SnackBar(
+            content: Text('Evento creado exitosamente!'),
+            backgroundColor: Colors.green,
+          ),
         );
         Navigator.of(context).pop(true); // Indicate success
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error al crear el evento: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al crear el evento: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -115,89 +123,196 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryColor = Color(0xFFE91E63);
+    const Color backgroundColor = Color(0xFFFFF8E1);
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Crear Evento'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: const Text(
+          'Nuevo Evento',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              TextFormField(
-                controller: _tituloController,
-                decoration: const InputDecoration(
-                  labelText: 'Título del Evento',
-                  border: OutlineInputBorder(),
+      body: Stack(
+        children: [
+          Positioned(
+            top: -100,
+            right: -100,
+            child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+          ),
+          Positioned(
+            bottom: -150,
+            left: -150,
+            child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+          ),
+          Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: <Widget>[
+                const SizedBox(height: 16),
+                _buildTextFormField(
+                  controller: _tituloController,
+                  label: 'Título del Evento',
+                  icon: Icons.title,
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return 'Ingrese el título del evento';
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return 'Ingrese el título del evento';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _nombreController,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre del Evento',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 24),
+                _buildTextFormField(
+                  controller: _nombreController,
+                  label: 'Evento solicitado por',
+                  icon: Icons.person_outline,
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return 'Ingrese el nombre del cliente';
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return 'Ingrese el nombre del evento';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              ListTile(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                  side: const BorderSide(color: Colors.grey),
+                const SizedBox(height: 24),
+                _buildDatePickerField(),
+                const SizedBox(height: 24),
+                _buildTextFormField(
+                  controller: _ubicacionController,
+                  label: 'Ubicación (Opcional)',
+                  icon: Icons.location_on_outlined,
                 ),
-                title: Text(
-                  _selectedDate == null
-                      ? 'Seleccionar Fecha y Hora'
-                      : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
+                const SizedBox(height: 24),
+                _buildTextFormField(
+                  controller: _descripcionController,
+                  label: 'Descripción (Opcional)',
+                  icon: Icons.description_outlined,
+                  maxLines: 4,
                 ),
-                trailing: const Icon(Icons.calendar_today),
-                onTap: () => _selectDate(context),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _ubicacionController,
-                decoration: const InputDecoration(
-                  labelText: 'Ubicación (Opcional)',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 1,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descripcionController,
-                decoration: const InputDecoration(
-                  labelText: 'Descripción (Opcional)',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 24),
-              _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : ElevatedButton(
-                    onPressed: _saveEvent,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text('Guardar Evento'),
+                const SizedBox(height: 32),
+                if (_isLoading)
+                  const Center(
+                    child: CircularProgressIndicator(color: primaryColor),
+                  )
+                else
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.save_alt_outlined),
+                          onPressed: _saveEvent,
+                          label: const Text('Guardar Evento'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            elevation: 8,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(color: primaryColor),
+                        ),
+                      ),
+                    ],
                   ),
-            ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDatePickerField() {
+    return InkWell(
+      onTap: () => _selectDate(context),
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: 'Fecha y Hora del Evento',
+          prefixIcon: const Icon(
+            Icons.calendar_today_outlined,
+            color: Color(0xFFE91E63),
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: const BorderSide(color: Color(0xFFE91E63), width: 2.0),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+        ),
+        child: Text(
+          _selectedDate == null
+              ? 'Toca para seleccionar'
+              : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
+          style: TextStyle(
+            fontSize: 16,
+            color: _selectedDate == null ? Colors.grey[600] : Colors.black87,
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+    int? maxLines = 1,
+  }) {
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: const Color(0xFFE91E63)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          borderSide: const BorderSide(color: Color(0xFFE91E63), width: 2.0),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+      ),
+    );
+  }
+}
+
+class _Circle extends StatelessWidget {
+  final Color color;
+  final double size;
+  const _Circle({required this.color, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }
