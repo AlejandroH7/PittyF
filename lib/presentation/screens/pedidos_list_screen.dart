@@ -33,8 +33,6 @@ class _PedidosListScreenState extends State<PedidosListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Pedidos'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
       ),
       body: FutureBuilder<List<PedidoModel>>(
         future: _pedidosFuture,

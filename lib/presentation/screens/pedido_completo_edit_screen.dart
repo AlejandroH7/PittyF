@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pittyf/data/models/client_model.dart';
 import 'package:pittyf/data/models/dessert_model.dart';
@@ -158,7 +157,7 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
               padding: const EdgeInsets.all(16),
               children: [
                 DropdownButtonFormField<int>(
-                  value: _selectedClientId,
+                  initialValue: _selectedClientId,
                   items: formData.clients.map((c) => DropdownMenuItem<int>(value: c.id, child: Text(c.nombre))).toList(),
                   onChanged: (v) => setState(() => _selectedClientId = v),
                   validator: (v) => v == null ? 'Seleccione un cliente' : null,
@@ -166,7 +165,7 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<DessertModel>(
-                  value: _selectedPostre,
+                  initialValue: _selectedPostre,
                   items: formData.desserts.map((d) => DropdownMenuItem<DessertModel>(value: d, child: Text(d.nombre))).toList(),
                   onChanged: (v) {
                     setState(() {
@@ -192,7 +191,7 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                       // Calculate effective available stock: current stock + quantity of this specific pedido
                       final effectiveAvailableStock = _selectedPostre!.porciones + _pedido!.cantidad;
                       if (cantidad > effectiveAvailableStock) {
-                        return 'Stock insuficiente. Disponibles: ${effectiveAvailableStock}';
+                        return 'Stock insuficiente. Disponibles: $effectiveAvailableStock';
                       }
                     }
                     return null;

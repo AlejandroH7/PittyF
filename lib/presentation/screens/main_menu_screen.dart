@@ -10,8 +10,6 @@ class MainMenuScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Menú'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
       ),
       body: ListView(
         children: <Widget>[

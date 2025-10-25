@@ -46,8 +46,6 @@ class _ClientsListScreenState extends State<ClientsListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Clientes'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
       ),
       body: FutureBuilder<List<ClientModel>>(
         future: _clientsFuture,

@@ -172,7 +172,7 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
               padding: const EdgeInsets.all(16.0),
               children: [
                 DropdownButtonFormField<int>(
-                  value: _selectedClientId,
+                  initialValue: _selectedClientId,
                   decoration: const InputDecoration(labelText: 'Cliente', border: OutlineInputBorder()),
                   items: formData.clients.map((client) {
                     return DropdownMenuItem<int>(value: client.id, child: Text(client.nombre));
@@ -182,7 +182,7 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<DessertModel>(
-                  value: _selectedPostre,
+                  initialValue: _selectedPostre,
                   decoration: const InputDecoration(labelText: 'Postre', border: OutlineInputBorder()),
                   items: formData.desserts.map((dessert) {
                     return DropdownMenuItem<DessertModel>(value: dessert, child: Text(dessert.nombre));
