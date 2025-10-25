@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'pedido_completo_model.g.dart';
@@ -31,6 +30,7 @@ class PedidoCompletoModel {
     this.updatedAt,
   });
 
-  factory PedidoCompletoModel.fromJson(Map<String, dynamic> json) => _$PedidoCompletoModelFromJson(json);
+  factory PedidoCompletoModel.fromJson(Map<String, dynamic> json) =>
+      _$PedidoCompletoModelFromJson(json);
   Map<String, dynamic> toJson() => _$PedidoCompletoModelToJson(this);
 }

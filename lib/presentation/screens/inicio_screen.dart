@@ -18,9 +18,9 @@ class InicioScreen extends StatelessWidget {
                 Text(
                   'Bienvenido a Pitty',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: const Color(0xFF8B0000), // Vino color
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: const Color(0xFF8B0000), // Vino color
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 48),
@@ -47,9 +47,9 @@ class InicioScreen extends StatelessWidget {
                     child: Text(
                       'Iniciar',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

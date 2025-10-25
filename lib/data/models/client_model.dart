@@ -24,6 +24,7 @@ class ClientModel {
     required this.updatedBy,
   });
 
-  factory ClientModel.fromJson(Map<String, dynamic> json) => _$ClientModelFromJson(json);
+  factory ClientModel.fromJson(Map<String, dynamic> json) =>
+      _$ClientModelFromJson(json);
   Map<String, dynamic> toJson() => _$ClientModelToJson(this);
 }

@@ -36,7 +36,10 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
 
       final clientRequest = ClientRequestModel(
         nombre: _nombreController.text,
-        telefono: _telefonoController.text.isNotEmpty ? _telefonoController.text : null,
+        telefono:
+            _telefonoController.text.isNotEmpty
+                ? _telefonoController.text
+                : null,
         notas: _notasController.text.isNotEmpty ? _notasController.text : null,
       );
 
@@ -46,13 +49,15 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Cliente creado exitosamente!')),
           );
-          Navigator.of(context).pop(true); // Pop with true to indicate success and trigger refresh
+          Navigator.of(
+            context,
+          ).pop(true); // Pop with true to indicate success and trigger refresh
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error al crear cliente: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error al crear cliente: $e')));
         }
       } finally {
         if (mounted) {
@@ -104,7 +109,9 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly, // Only allow digits
-                  LengthLimitingTextInputFormatter(30), // Limit length to 30 characters
+                  LengthLimitingTextInputFormatter(
+                    30,
+                  ), // Limit length to 30 characters
                 ],
                 validator: (value) {
                   if (value != null && value.length > 30) {
@@ -126,38 +133,42 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : SizedBox(
-                      height: 56,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _saveClient,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          elevation: 5,
+                    height: 56,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _saveClient,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Text(
-                          'Guardar',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        elevation: 5,
+                      ),
+                      child: Text(
+                        'Guardar',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
+                  ),
               const SizedBox(height: 16),
               SizedBox(
                 height: 56,
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(false); // Pop with false to indicate cancellation
+                    Navigator.of(
+                      context,
+                    ).pop(false); // Pop with false to indicate cancellation
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.primary,
-                    side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -165,8 +176,8 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                   child: Text(
                     'Cancelar',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

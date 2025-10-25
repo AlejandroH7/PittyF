@@ -15,9 +15,13 @@ class PedidoCompletoApi {
       if (response.statusCode == 200) {
         // The backend returns a Page object, the content is in the 'content' field
         final List<dynamic> pedidoJsonList = response.data['content'];
-        return pedidoJsonList.map((json) => PedidoCompletoModel.fromJson(json)).toList();
+        return pedidoJsonList
+            .map((json) => PedidoCompletoModel.fromJson(json))
+            .toList();
       } else {
-        throw Exception('Failed to load pedidos completos: ${response.statusCode}');
+        throw Exception(
+          'Failed to load pedidos completos: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to load pedidos completos: ${e.message}');
@@ -26,7 +30,9 @@ class PedidoCompletoApi {
     }
   }
 
-  Future<PedidoCompletoModel> createPedidoCompleto(PedidoCompletoCreateRequestModel pedido) async {
+  Future<PedidoCompletoModel> createPedidoCompleto(
+    PedidoCompletoCreateRequestModel pedido,
+  ) async {
     try {
       final response = await _dio.post(
         '$baseUrl/api/pedido-completos',
@@ -35,7 +41,9 @@ class PedidoCompletoApi {
       if (response.statusCode == 201) {
         return PedidoCompletoModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to create pedido completo: ${response.statusCode}');
+        throw Exception(
+          'Failed to create pedido completo: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to create pedido completo: ${e.message}');
@@ -50,16 +58,23 @@ class PedidoCompletoApi {
       if (response.statusCode == 200) {
         return PedidoCompletoModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to load pedido completo with ID $id: ${response.statusCode}');
+        throw Exception(
+          'Failed to load pedido completo with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
-      throw Exception('Failed to load pedido completo with ID $id: ${e.message}');
+      throw Exception(
+        'Failed to load pedido completo with ID $id: ${e.message}',
+      );
     } catch (e) {
       throw Exception('An unexpected error occurred: $e');
     }
   }
 
-  Future<PedidoCompletoModel> updatePedidoCompleto(int id, PedidoCompletoUpdateRequestModel pedido) async {
+  Future<PedidoCompletoModel> updatePedidoCompleto(
+    int id,
+    PedidoCompletoUpdateRequestModel pedido,
+  ) async {
     try {
       final response = await _dio.put(
         '$baseUrl/api/pedido-completos/$id',
@@ -68,7 +83,9 @@ class PedidoCompletoApi {
       if (response.statusCode == 200) {
         return PedidoCompletoModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to update pedido completo: ${response.statusCode}');
+        throw Exception(
+          'Failed to update pedido completo: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to update pedido completo: ${e.message}');
@@ -81,7 +98,9 @@ class PedidoCompletoApi {
     try {
       final response = await _dio.delete('$baseUrl/api/pedido-completos/$id');
       if (response.statusCode != 204) {
-        throw Exception('Failed to delete pedido completo: ${response.statusCode}');
+        throw Exception(
+          'Failed to delete pedido completo: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to delete pedido completo: ${e.message}');

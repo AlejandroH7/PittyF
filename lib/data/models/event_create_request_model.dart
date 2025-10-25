@@ -18,6 +18,7 @@ class EventCreateRequestModel {
     this.ubicacion,
   });
 
-  factory EventCreateRequestModel.fromJson(Map<String, dynamic> json) => _$EventCreateRequestModelFromJson(json);
+  factory EventCreateRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$EventCreateRequestModelFromJson(json);
   Map<String, dynamic> toJson() => _$EventCreateRequestModelToJson(this);
 }

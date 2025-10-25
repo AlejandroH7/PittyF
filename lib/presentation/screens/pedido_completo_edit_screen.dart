@@ -21,7 +21,8 @@ class PedidoCompletoEditScreen extends StatefulWidget {
   static const String routeName = '/pedidos-completos/editar';
 
   @override
-  State<PedidoCompletoEditScreen> createState() => _PedidoCompletoEditScreenState();
+  State<PedidoCompletoEditScreen> createState() =>
+      _PedidoCompletoEditScreenState();
 }
 
 class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
@@ -50,7 +51,8 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_pedido == null) {
-      _pedido = ModalRoute.of(context)?.settings.arguments as PedidoCompletoModel?;
+      _pedido =
+          ModalRoute.of(context)?.settings.arguments as PedidoCompletoModel?;
       if (_pedido != null) {
         _populateForm(_pedido!);
       }
@@ -71,7 +73,10 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
       ClientsApi().getAllClients(),
       DessertsApi().getAllDesserts(),
     ]);
-    return _FormData(results[0] as List<ClientModel>, results[1] as List<DessertModel>);
+    return _FormData(
+      results[0] as List<ClientModel>,
+      results[1] as List<DessertModel>,
+    );
   }
 
   @override
@@ -104,7 +109,9 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
   Future<void> _updatePedido() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seleccione una fecha')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Seleccione una fecha')));
       return;
     }
 
@@ -122,12 +129,16 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
     try {
       await PedidoCompletoApi().updatePedidoCompleto(_pedido!.id, requestModel);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pedido actualizado!')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Pedido actualizado!')));
         Navigator.of(context).pop(true);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     } finally {
       if (mounted) {
@@ -143,13 +154,18 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
       body: FutureBuilder<_FormData>(
         future: _formDataFuture,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
+          if (!snapshot.hasData)
+            return const Center(child: CircularProgressIndicator());
+          if (snapshot.hasError)
+            return Center(child: Text('Error: ${snapshot.error}'));
 
           final formData = snapshot.data!;
           // Find the initial selected postre object
           if (_selectedPostre == null && _pedido != null) {
-            _selectedPostre = formData.desserts.firstWhere((d) => d.id == _pedido!.postreId, orElse: () => formData.desserts.first);
+            _selectedPostre = formData.desserts.firstWhere(
+              (d) => d.id == _pedido!.postreId,
+              orElse: () => formData.desserts.first,
+            );
           }
 
           return Form(
@@ -159,15 +175,34 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
               children: [
                 DropdownButtonFormField<int>(
                   value: _selectedClientId,
-                  items: formData.clients.map((c) => DropdownMenuItem<int>(value: c.id, child: Text(c.nombre))).toList(),
+                  items:
+                      formData.clients
+                          .map(
+                            (c) => DropdownMenuItem<int>(
+                              value: c.id,
+                              child: Text(c.nombre),
+                            ),
+                          )
+                          .toList(),
                   onChanged: (v) => setState(() => _selectedClientId = v),
                   validator: (v) => v == null ? 'Seleccione un cliente' : null,
-                  decoration: const InputDecoration(labelText: 'Cliente', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: 'Cliente',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<DessertModel>(
                   value: _selectedPostre,
-                  items: formData.desserts.map((d) => DropdownMenuItem<DessertModel>(value: d, child: Text(d.nombre))).toList(),
+                  items:
+                      formData.desserts
+                          .map(
+                            (d) => DropdownMenuItem<DessertModel>(
+                              value: d,
+                              child: Text(d.nombre),
+                            ),
+                          )
+                          .toList(),
                   onChanged: (v) {
                     setState(() {
                       _selectedPostre = v;
@@ -176,21 +211,30 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                     });
                   },
                   validator: (v) => v == null ? 'Seleccione un postre' : null,
-                  decoration: const InputDecoration(labelText: 'Postre', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: 'Postre',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _cantidadController,
-                  decoration: const InputDecoration(labelText: 'Cantidad', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: 'Cantidad',
+                    border: OutlineInputBorder(),
+                  ),
                   keyboardType: TextInputType.number,
                   validator: (value) {
-                     if (value == null || value.isEmpty) return 'Ingrese una cantidad';
+                    if (value == null || value.isEmpty)
+                      return 'Ingrese una cantidad';
                     final cantidad = int.tryParse(value);
-                    if (cantidad == null || cantidad <= 0) return 'Debe ser un número positivo';
+                    if (cantidad == null || cantidad <= 0)
+                      return 'Debe ser un número positivo';
 
                     if (_selectedPostre != null && _pedido != null) {
                       // Calculate effective available stock: current stock + quantity of this specific pedido
-                      final effectiveAvailableStock = _selectedPostre!.porciones + _pedido!.cantidad;
+                      final effectiveAvailableStock =
+                          _selectedPostre!.porciones + _pedido!.cantidad;
                       if (cantidad > effectiveAvailableStock) {
                         return 'Stock insuficiente. Disponibles: ${effectiveAvailableStock}';
                       }
@@ -202,25 +246,45 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                 TextFormField(
                   controller: _totalController,
                   readOnly: true,
-                  decoration: const InputDecoration(labelText: 'Total', border: OutlineInputBorder(), fillColor: Colors.black12, filled: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Total',
+                    border: OutlineInputBorder(),
+                    fillColor: Colors.black12,
+                    filled: true,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _notaController,
-                  decoration: const InputDecoration(labelText: 'Nota', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                    labelText: 'Nota',
+                    border: OutlineInputBorder(),
+                  ),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4), side: const BorderSide(color: Colors.grey)),
-                  title: Text(_selectedDate == null ? 'Seleccionar Fecha' : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    side: const BorderSide(color: Colors.grey),
+                  ),
+                  title: Text(
+                    _selectedDate == null
+                        ? 'Seleccionar Fecha'
+                        : DateFormat(
+                          'dd/MM/yyyy hh:mm a',
+                        ).format(_selectedDate!),
+                  ),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () => _selectDate(context),
                 ),
                 const SizedBox(height: 24),
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
-                    : ElevatedButton(onPressed: _updatePedido, child: const Text('Actualizar Pedido')),
+                    : ElevatedButton(
+                      onPressed: _updatePedido,
+                      child: const Text('Actualizar Pedido'),
+                    ),
               ],
             ),
           );

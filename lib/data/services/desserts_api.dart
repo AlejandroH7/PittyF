@@ -14,7 +14,9 @@ class DessertsApi {
       final response = await _dio.get('$baseUrl/api/postres');
       if (response.statusCode == 200) {
         final List<dynamic> dessertJsonList = response.data;
-        return dessertJsonList.map((json) => DessertModel.fromJson(json)).toList();
+        return dessertJsonList
+            .map((json) => DessertModel.fromJson(json))
+            .toList();
       } else {
         throw Exception('Failed to load desserts: ${response.statusCode}');
       }
@@ -29,7 +31,8 @@ class DessertsApi {
         '$baseUrl/api/postres',
         data: dessert.toJson(),
       );
-      if (response.statusCode == 201) { // Assuming 201 Created for successful creation
+      if (response.statusCode == 201) {
+        // Assuming 201 Created for successful creation
         return DessertModel.fromJson(response.data);
       } else {
         throw Exception('Failed to create dessert: ${response.statusCode}');
@@ -45,7 +48,9 @@ class DessertsApi {
       if (response.statusCode == 200) {
         return DessertModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to load dessert with ID $id: ${response.statusCode}');
+        throw Exception(
+          'Failed to load dessert with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to load dessert with ID $id: ${e.message}');
@@ -57,8 +62,11 @@ class DessertsApi {
   Future<void> deleteDessert(int id) async {
     try {
       final response = await _dio.delete('$baseUrl/api/postres/$id');
-      if (response.statusCode != 204) { // Assuming 204 No Content for successful deletion
-        throw Exception('Failed to delete dessert with ID $id: ${response.statusCode}');
+      if (response.statusCode != 204) {
+        // Assuming 204 No Content for successful deletion
+        throw Exception(
+          'Failed to delete dessert with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to delete dessert with ID $id: ${e.message}');
@@ -67,16 +75,22 @@ class DessertsApi {
     }
   }
 
-  Future<DessertModel> updateDessert(int id, DessertRequestModel dessert) async {
+  Future<DessertModel> updateDessert(
+    int id,
+    DessertRequestModel dessert,
+  ) async {
     try {
       final response = await _dio.put(
         '$baseUrl/api/postres/$id',
         data: dessert.toJson(),
       );
-      if (response.statusCode == 200) { // Assuming 200 OK for successful update
+      if (response.statusCode == 200) {
+        // Assuming 200 OK for successful update
         return DessertModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to update dessert with ID $id: ${response.statusCode}');
+        throw Exception(
+          'Failed to update dessert with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to update dessert with ID $id: ${e.message}');

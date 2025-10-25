@@ -16,6 +16,7 @@ class DessertRequestModel {
     required this.activo,
   });
 
-  factory DessertRequestModel.fromJson(Map<String, dynamic> json) => _$DessertRequestModelFromJson(json);
+  factory DessertRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$DessertRequestModelFromJson(json);
   Map<String, dynamic> toJson() => _$DessertRequestModelToJson(this);
 }

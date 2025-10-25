@@ -75,14 +75,25 @@ class _PedidosListScreenState extends State<PedidosListScreen> {
                 itemBuilder: (context, index) {
                   final pedido = snapshot.data![index];
                   return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     elevation: 2,
                     child: ListTile(
-                      title: Text('Pedido #${pedido.id} - ${pedido.clienteNombre}'),
-                      subtitle: Text('Total: \$${pedido.total.toStringAsFixed(2)} - Estado: ${pedido.estado}'),
-                      trailing: Text('Fecha: ${pedido.fechaEntrega.split('T')[0]}'), // Display only date part
+                      title: Text(
+                        'Pedido #${pedido.id} - ${pedido.clienteNombre}',
+                      ),
+                      subtitle: Text(
+                        'Total: \$${pedido.total.toStringAsFixed(2)} - Estado: ${pedido.estado}',
+                      ),
+                      trailing: Text(
+                        'Fecha: ${pedido.fechaEntrega.split('T')[0]}',
+                      ), // Display only date part
                       onTap: () async {
-                        final nav = Navigator.of(context); // Capture Navigator before async gap
+                        final nav = Navigator.of(
+                          context,
+                        ); // Capture Navigator before async gap
                         final result = await nav.pushNamed(
                           PedidoDetailScreen.routeName,
                           arguments: pedido.id, // Pass the pedido ID
@@ -104,7 +115,9 @@ class _PedidosListScreenState extends State<PedidosListScreen> {
         onPressed: () {
           // TODO: Implement navigation to add pedido screen
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Botón para agregar pedido presionado')),
+            const SnackBar(
+              content: Text('Botón para agregar pedido presionado'),
+            ),
           );
         },
         child: const Icon(Icons.add),

@@ -24,6 +24,7 @@ class EventModel {
     this.updatedAt,
   });
 
-  factory EventModel.fromJson(Map<String, dynamic> json) => _$EventModelFromJson(json);
+  factory EventModel.fromJson(Map<String, dynamic> json) =>
+      _$EventModelFromJson(json);
   Map<String, dynamic> toJson() => _$EventModelToJson(this);
 }

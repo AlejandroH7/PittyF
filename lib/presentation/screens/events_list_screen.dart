@@ -38,7 +38,9 @@ class _EventsListScreenState extends State<EventsListScreen> {
 
         return dateB.compareTo(dateA); // Descending order (most recent first)
       });
-      _eventsFuture = Future.value(fetchedEvents); // Update the future with the fetched data
+      _eventsFuture = Future.value(
+        fetchedEvents,
+      ); // Update the future with the fetched data
     });
     return fetchedEvents;
   }

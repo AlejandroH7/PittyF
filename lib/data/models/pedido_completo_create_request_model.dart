@@ -20,6 +20,9 @@ class PedidoCompletoCreateRequestModel {
     required this.fechaEntrega,
   });
 
-  factory PedidoCompletoCreateRequestModel.fromJson(Map<String, dynamic> json) => _$PedidoCompletoCreateRequestModelFromJson(json);
-  Map<String, dynamic> toJson() => _$PedidoCompletoCreateRequestModelToJson(this);
+  factory PedidoCompletoCreateRequestModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PedidoCompletoCreateRequestModelFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$PedidoCompletoCreateRequestModelToJson(this);
 }

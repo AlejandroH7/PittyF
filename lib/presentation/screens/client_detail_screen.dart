@@ -151,13 +151,12 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                         if (!mounted) return; // Check mounted after async gap
                         if (e.response?.statusCode == 409) {
                           String errorMessage = 'Error desconocido';
-                          if (e.response?.data is Map<String, dynamic> && e.response?.data['message'] != null) {
+                          if (e.response?.data is Map<String, dynamic> &&
+                              e.response?.data['message'] != null) {
                             errorMessage = e.response!.data['message'];
                           }
                           messenger.showSnackBar(
-                            SnackBar(
-                              content: Text(errorMessage),
-                            ),
+                            SnackBar(content: Text(errorMessage)),
                           );
                         } else {
                           messenger.showSnackBar(

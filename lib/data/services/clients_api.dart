@@ -14,7 +14,9 @@ class ClientsApi {
       final response = await _dio.get('$baseUrl/api/clientes');
       if (response.statusCode == 200) {
         final List<dynamic> clientJsonList = response.data;
-        return clientJsonList.map((json) => ClientModel.fromJson(json)).toList();
+        return clientJsonList
+            .map((json) => ClientModel.fromJson(json))
+            .toList();
       } else {
         throw Exception('Failed to load clients: ${response.statusCode}');
       }
@@ -31,7 +33,8 @@ class ClientsApi {
         '$baseUrl/api/clientes',
         data: client.toJson(),
       );
-      if (response.statusCode == 201) { // Assuming 201 Created for successful creation
+      if (response.statusCode == 201) {
+        // Assuming 201 Created for successful creation
         return ClientModel.fromJson(response.data);
       } else {
         throw Exception('Failed to create client: ${response.statusCode}');
@@ -49,7 +52,9 @@ class ClientsApi {
       if (response.statusCode == 200) {
         return ClientModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to load client with ID $id: ${response.statusCode}');
+        throw Exception(
+          'Failed to load client with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to load client with ID $id: ${e.message}');
@@ -64,10 +69,13 @@ class ClientsApi {
         '$baseUrl/api/clientes/$id',
         data: client.toJson(),
       );
-      if (response.statusCode == 200) { // Assuming 200 OK for successful update
+      if (response.statusCode == 200) {
+        // Assuming 200 OK for successful update
         return ClientModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to update client with ID $id: ${response.statusCode}');
+        throw Exception(
+          'Failed to update client with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to update client with ID $id: ${e.message}');
@@ -79,8 +87,11 @@ class ClientsApi {
   Future<void> deleteClient(int id) async {
     try {
       final response = await _dio.delete('$baseUrl/api/clientes/$id');
-      if (response.statusCode != 204) { // Assuming 204 No Content for successful deletion
-        throw Exception('Failed to delete client with ID $id: ${response.statusCode}');
+      if (response.statusCode != 204) {
+        // Assuming 204 No Content for successful deletion
+        throw Exception(
+          'Failed to delete client with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to delete client with ID $id: ${e.message}');

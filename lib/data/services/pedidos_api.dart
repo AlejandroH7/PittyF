@@ -12,7 +12,9 @@ class PedidosApi {
       final response = await _dio.get('$baseUrl/api/pedidos');
       if (response.statusCode == 200) {
         final List<dynamic> pedidoJsonList = response.data;
-        return pedidoJsonList.map((json) => PedidoModel.fromJson(json)).toList();
+        return pedidoJsonList
+            .map((json) => PedidoModel.fromJson(json))
+            .toList();
       } else {
         throw Exception('Failed to load pedidos: ${response.statusCode}');
       }
@@ -29,7 +31,9 @@ class PedidosApi {
       if (response.statusCode == 200) {
         return PedidoModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to load pedido with ID $id: ${response.statusCode}');
+        throw Exception(
+          'Failed to load pedido with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to load pedido with ID $id: ${e.message}');

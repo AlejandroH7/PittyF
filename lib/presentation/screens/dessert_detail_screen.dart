@@ -83,7 +83,9 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () async {
-                    final nav = Navigator.of(context); // Capture Navigator before async gap
+                    final nav = Navigator.of(
+                      context,
+                    ); // Capture Navigator before async gap
                     final result = await nav.pushNamed(
                       DessertEditScreen
                           .routeName, // Navigate to the actual edit screen
@@ -105,8 +107,12 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
                 IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () async {
-                    final nav = Navigator.of(context); // Capture Navigator before async gap
-                    final messenger = ScaffoldMessenger.of(context); // Capture ScaffoldMessenger before async gap
+                    final nav = Navigator.of(
+                      context,
+                    ); // Capture Navigator before async gap
+                    final messenger = ScaffoldMessenger.of(
+                      context,
+                    ); // Capture ScaffoldMessenger before async gap
                     final bool? confirmDelete = await showDialog<bool>(
                       context: context,
                       builder:
@@ -147,18 +153,19 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
                         // print('DioException caught: ${e.runtimeType}, Status Code: ${e.response?.statusCode}, Message: ${e.message}'); // Log details removed
                         if (e.response?.statusCode == 409) {
                           String errorMessage = 'Error desconocido';
-                          if (e.response?.data is Map<String, dynamic> && e.response?.data['message'] != null) {
+                          if (e.response?.data is Map<String, dynamic> &&
+                              e.response?.data['message'] != null) {
                             errorMessage = e.response!.data['message'];
                           }
                           messenger.showSnackBar(
-                            SnackBar(
-                              content: Text(errorMessage),
-                            ),
+                            SnackBar(content: Text(errorMessage)),
                           );
                         } else {
                           messenger.showSnackBar(
                             SnackBar(
-                              content: Text('Error al eliminar postre: ${e.message}'),
+                              content: Text(
+                                'Error al eliminar postre: ${e.message}',
+                              ),
                             ),
                           );
                         }
@@ -166,7 +173,11 @@ class _DessertDetailScreenState extends State<DessertDetailScreen> {
                         if (!mounted) return; // Check mounted after async gap
                         // print('Unexpected error caught: ${e.runtimeType}, Message: $e'); // Log details removed
                         messenger.showSnackBar(
-                          SnackBar(content: Text('Error inesperado al eliminar postre: $e')),
+                          SnackBar(
+                            content: Text(
+                              'Error inesperado al eliminar postre: $e',
+                            ),
+                          ),
                         );
                       }
                     }

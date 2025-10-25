@@ -90,7 +90,11 @@ class _EventEditScreenState extends State<EventEditScreen> {
     }
     if (_selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, seleccione una fecha y hora para el evento.')),
+        const SnackBar(
+          content: Text(
+            'Por favor, seleccione una fecha y hora para el evento.',
+          ),
+        ),
       );
       return;
     }
@@ -103,8 +107,14 @@ class _EventEditScreenState extends State<EventEditScreen> {
       nombre: _nombreController.text,
       titulo: _tituloController.text,
       fecha: _selectedDate!.toUtc().toIso8601String(),
-      descripcion: _descripcionController.text.isNotEmpty ? _descripcionController.text : null,
-      ubicacion: _ubicacionController.text.isNotEmpty ? _ubicacionController.text : null,
+      descripcion:
+          _descripcionController.text.isNotEmpty
+              ? _descripcionController.text
+              : null,
+      ubicacion:
+          _ubicacionController.text.isNotEmpty
+              ? _ubicacionController.text
+              : null,
     );
 
     try {
@@ -146,48 +156,71 @@ class _EventEditScreenState extends State<EventEditScreen> {
             children: <Widget>[
               TextFormField(
                 controller: _tituloController,
-                decoration: const InputDecoration(labelText: 'Título del Evento', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: 'Título del Evento',
+                  border: OutlineInputBorder(),
+                ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'Ingrese el título del evento';
+                  if (value == null || value.isEmpty)
+                    return 'Ingrese el título del evento';
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nombreController,
-                decoration: const InputDecoration(labelText: 'Nombre del Evento', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: 'Nombre del Evento',
+                  border: OutlineInputBorder(),
+                ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'Ingrese el nombre del evento';
+                  if (value == null || value.isEmpty)
+                    return 'Ingrese el nombre del evento';
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               ListTile(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4), side: const BorderSide(color: Colors.grey)),
-                title: Text(_selectedDate == null ? 'Seleccionar Fecha y Hora' : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                  side: const BorderSide(color: Colors.grey),
+                ),
+                title: Text(
+                  _selectedDate == null
+                      ? 'Seleccionar Fecha y Hora'
+                      : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
+                ),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(context),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _ubicacionController,
-                decoration: const InputDecoration(labelText: 'Ubicación (Opcional)', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: 'Ubicación (Opcional)',
+                  border: OutlineInputBorder(),
+                ),
                 maxLines: 1,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _descripcionController,
-                decoration: const InputDecoration(labelText: 'Descripción (Opcional)', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                  labelText: 'Descripción (Opcional)',
+                  border: OutlineInputBorder(),
+                ),
                 maxLines: 3,
               ),
               const SizedBox(height: 24),
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
-                      onPressed: _updateEvent,
-                      style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-                      child: const Text('Actualizar Evento'),
+                    onPressed: _updateEvent,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
+                    child: const Text('Actualizar Evento'),
+                  ),
             ],
           ),
         ),

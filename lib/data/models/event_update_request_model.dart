@@ -18,6 +18,7 @@ class EventUpdateRequestModel {
     this.ubicacion,
   });
 
-  factory EventUpdateRequestModel.fromJson(Map<String, dynamic> json) => _$EventUpdateRequestModelFromJson(json);
+  factory EventUpdateRequestModel.fromJson(Map<String, dynamic> json) =>
+      _$EventUpdateRequestModelFromJson(json);
   Map<String, dynamic> toJson() => _$EventUpdateRequestModelToJson(this);
 }

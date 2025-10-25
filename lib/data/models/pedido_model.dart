@@ -25,6 +25,7 @@ class PedidoModel {
     required this.items,
   });
 
-  factory PedidoModel.fromJson(Map<String, dynamic> json) => _$PedidoModelFromJson(json);
+  factory PedidoModel.fromJson(Map<String, dynamic> json) =>
+      _$PedidoModelFromJson(json);
   Map<String, dynamic> toJson() => _$PedidoModelToJson(this);
 }

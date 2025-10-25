@@ -87,11 +87,16 @@ class _DessertsListScreenState extends State<DessertsListScreen> {
                 itemBuilder: (context, index) {
                   final dessert = snapshot.data![index];
                   return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
                     elevation: 2,
                     child: ListTile(
                       title: Text(dessert.nombre),
-                      subtitle: Text('Precio: \$${dessert.precio.toStringAsFixed(2)} - Porciones: ${dessert.porciones}'),
+                      subtitle: Text(
+                        'Precio: \$${dessert.precio.toStringAsFixed(2)} - Porciones: ${dessert.porciones}',
+                      ),
                       trailing: Text('ID: ${dessert.id}'),
                       onTap: () async {
                         final result = await Navigator.of(context).pushNamed(
@@ -112,7 +117,9 @@ class _DessertsListScreenState extends State<DessertsListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.of(context).pushNamed('/postres/nuevo');
+          final result = await Navigator.of(
+            context,
+          ).pushNamed('/postres/nuevo');
           if (result == true) {
             _refreshDesserts(); // Refresh desserts if a new one was added
           }

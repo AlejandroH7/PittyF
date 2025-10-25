@@ -32,9 +32,12 @@ class _ClientEditScreenState extends State<ClientEditScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (ModalRoute.of(context)?.settings.arguments != null) {
-      _initialClient = ModalRoute.of(context)?.settings.arguments as ClientModel;
+      _initialClient =
+          ModalRoute.of(context)?.settings.arguments as ClientModel;
       _nombreController = TextEditingController(text: _initialClient.nombre);
-      _telefonoController = TextEditingController(text: _initialClient.telefono);
+      _telefonoController = TextEditingController(
+        text: _initialClient.telefono,
+      );
       _notasController = TextEditingController(text: _initialClient.notas);
     } else {
       // Handle error: no client data provided
@@ -43,7 +46,11 @@ class _ClientEditScreenState extends State<ClientEditScreen> {
       _notasController = TextEditingController();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Error: No se proporcionaron datos del cliente para editar.')),
+          const SnackBar(
+            content: Text(
+              'Error: No se proporcionaron datos del cliente para editar.',
+            ),
+          ),
         );
         Navigator.of(context).pop();
       });
@@ -66,7 +73,10 @@ class _ClientEditScreenState extends State<ClientEditScreen> {
 
       final clientRequest = ClientRequestModel(
         nombre: _nombreController.text,
-        telefono: _telefonoController.text.isNotEmpty ? _telefonoController.text : null,
+        telefono:
+            _telefonoController.text.isNotEmpty
+                ? _telefonoController.text
+                : null,
         notas: _notasController.text.isNotEmpty ? _notasController.text : null,
       );
 
@@ -76,7 +86,9 @@ class _ClientEditScreenState extends State<ClientEditScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Cliente actualizado exitosamente!')),
           );
-          Navigator.of(context).pop(true); // Pop with true to indicate success and trigger refresh
+          Navigator.of(
+            context,
+          ).pop(true); // Pop with true to indicate success and trigger refresh
         }
       } catch (e) {
         if (mounted) {
@@ -134,7 +146,9 @@ class _ClientEditScreenState extends State<ClientEditScreen> {
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly, // Only allow digits
-                  LengthLimitingTextInputFormatter(30), // Limit length to 30 characters
+                  LengthLimitingTextInputFormatter(
+                    30,
+                  ), // Limit length to 30 characters
                 ],
                 validator: (value) {
                   if (value != null && value.length > 30) {
@@ -156,38 +170,42 @@ class _ClientEditScreenState extends State<ClientEditScreen> {
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : SizedBox(
-                      height: 56,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _updateClient,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          elevation: 5,
+                    height: 56,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _updateClient,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Text(
-                          'Guardar Cambios',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        elevation: 5,
+                      ),
+                      child: Text(
+                        'Guardar Cambios',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
+                  ),
               const SizedBox(height: 16),
               SizedBox(
                 height: 56,
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(false); // Pop with false to indicate cancellation
+                    Navigator.of(
+                      context,
+                    ).pop(false); // Pop with false to indicate cancellation
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.primary,
-                    side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -195,8 +213,8 @@ class _ClientEditScreenState extends State<ClientEditScreen> {
                   child: Text(
                     'Cancelar',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

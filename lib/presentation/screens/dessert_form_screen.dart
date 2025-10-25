@@ -44,7 +44,9 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
 
       bool success = false;
       final nav = Navigator.of(context); // Capture Navigator before async gap
-      final messenger = ScaffoldMessenger.of(context); // Capture ScaffoldMessenger before async gap
+      final messenger = ScaffoldMessenger.of(
+        context,
+      ); // Capture ScaffoldMessenger before async gap
 
       try {
         await _dessertsApi.createDessert(dessertRequest);
@@ -64,7 +66,9 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
           _isLoading = false;
         });
         if (success) {
-          nav.pop(true); // Pop with true to indicate success and trigger refresh
+          nav.pop(
+            true,
+          ); // Pop with true to indicate success and trigger refresh
         }
       }
     }
@@ -106,13 +110,16 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
                 ),
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}$')), // Allow decimal with 2 places
+                  FilteringTextInputFormatter.allow(
+                    RegExp(r'^\d+\.?\d{0,2}$'),
+                  ), // Allow decimal with 2 places
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa el precio';
                   }
-                  if (double.tryParse(value) == null || double.parse(value) <= 0) {
+                  if (double.tryParse(value) == null ||
+                      double.parse(value) <= 0) {
                     return 'El precio debe ser un número mayor a 0';
                   }
                   return null;
@@ -153,38 +160,42 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : SizedBox(
-                      height: 56,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _saveDessert,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          elevation: 5,
+                    height: 56,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _saveDessert,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Text(
-                          'Guardar',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        elevation: 5,
+                      ),
+                      child: Text(
+                        'Guardar',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
+                  ),
               const SizedBox(height: 16),
               SizedBox(
                 height: 56,
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(false); // Pop with false to indicate cancellation
+                    Navigator.of(
+                      context,
+                    ).pop(false); // Pop with false to indicate cancellation
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.primary,
-                    side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -192,8 +203,8 @@ class _DessertFormScreenState extends State<DessertFormScreen> {
                   child: Text(
                     'Cancelar',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

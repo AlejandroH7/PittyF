@@ -22,6 +22,7 @@ class DessertModel {
     this.updatedAt,
   });
 
-  factory DessertModel.fromJson(Map<String, dynamic> json) => _$DessertModelFromJson(json);
+  factory DessertModel.fromJson(Map<String, dynamic> json) =>
+      _$DessertModelFromJson(json);
   Map<String, dynamic> toJson() => _$DessertModelToJson(this);
 }

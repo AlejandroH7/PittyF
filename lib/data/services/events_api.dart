@@ -12,12 +12,13 @@ class EventsApi {
   Future<List<EventModel>> getAllEvents() async {
     try {
       final response = await _dio.get('$baseUrl/api/eventos');
-              if (response.statusCode == 200) {
-                // The backend returns a Page object, the content is in the 'content' field
-                final List<dynamic> eventJsonList = response.data['content'];
-                return eventJsonList.map((json) => EventModel.fromJson(json)).toList();
-              } else {
-                throw Exception('Failed to load events: ${response.statusCode}');      }
+      if (response.statusCode == 200) {
+        // The backend returns a Page object, the content is in the 'content' field
+        final List<dynamic> eventJsonList = response.data['content'];
+        return eventJsonList.map((json) => EventModel.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load events: ${response.statusCode}');
+      }
     } on DioException catch (e) {
       throw Exception('Failed to load events: ${e.message}');
     } catch (e) {
@@ -49,7 +50,9 @@ class EventsApi {
       if (response.statusCode == 200) {
         return EventModel.fromJson(response.data);
       } else {
-        throw Exception('Failed to load event with ID $id: ${response.statusCode}');
+        throw Exception(
+          'Failed to load event with ID $id: ${response.statusCode}',
+        );
       }
     } on DioException catch (e) {
       throw Exception('Failed to load event with ID $id: ${e.message}');

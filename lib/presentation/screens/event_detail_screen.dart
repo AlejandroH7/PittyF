@@ -102,7 +102,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       setState(() {
                         _eventDetailFuture = _eventsApi.getEventById(_eventId!);
                       });
-                      Navigator.of(context).pop(true); // Signal list screen to refresh
+                      Navigator.of(
+                        context,
+                      ).pop(true); // Signal list screen to refresh
                     }
                   },
                 ),
@@ -149,15 +151,17 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         if (mounted) {
                           String errorMessage = 'Error desconocido';
                           if (e.response?.statusCode == 409) {
-                            if (e.response?.data is Map<String, dynamic> && e.response?.data['message'] != null) {
+                            if (e.response?.data is Map<String, dynamic> &&
+                                e.response?.data['message'] != null) {
                               errorMessage = e.response!.data['message'];
                             }
                           } else {
-                            errorMessage = 'Error al eliminar evento: ${e.message}';
+                            errorMessage =
+                                'Error al eliminar evento: ${e.message}';
                           }
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(errorMessage)),
-                          );
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(errorMessage)));
                         }
                       } catch (e) {
                         if (mounted) {

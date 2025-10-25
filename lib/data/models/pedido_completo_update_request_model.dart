@@ -20,6 +20,9 @@ class PedidoCompletoUpdateRequestModel {
     required this.fechaEntrega,
   });
 
-  factory PedidoCompletoUpdateRequestModel.fromJson(Map<String, dynamic> json) => _$PedidoCompletoUpdateRequestModelFromJson(json);
-  Map<String, dynamic> toJson() => _$PedidoCompletoUpdateRequestModelToJson(this);
+  factory PedidoCompletoUpdateRequestModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$PedidoCompletoUpdateRequestModelFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$PedidoCompletoUpdateRequestModelToJson(this);
 }
