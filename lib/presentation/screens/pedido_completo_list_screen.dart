@@ -128,6 +128,10 @@ class _PedidoCompletoListScreenState extends State<PedidoCompletoListScreen> {
 
           title: const Text('Lista de Pedidos'),
 
+          backgroundColor: Theme.of(context).colorScheme.primary,
+
+          foregroundColor: Colors.white,
+
         ),
 
         body: FutureBuilder<List<PedidoCompletoModel>>(

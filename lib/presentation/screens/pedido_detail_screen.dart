@@ -172,7 +172,7 @@ class _PedidoDetailScreenState extends State<PedidoDetailScreen> {
                         // TODO: Display personalizaciones if needed
                       ),
                     );
-                  }),
+                  }).toList(),
                 ],
               ),
             ),

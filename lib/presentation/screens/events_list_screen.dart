@@ -57,6 +57,8 @@ class _EventsListScreenState extends State<EventsListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Eventos'),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
       ),
       body: FutureBuilder<List<EventModel>>(
         future: _eventsFuture,
