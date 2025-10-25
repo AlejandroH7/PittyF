@@ -50,21 +50,37 @@ class _DessertsListScreenState extends State<DessertsListScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Postres', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Postres',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
       body: Stack(
         children: [
-          Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-          Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+          Positioned(
+            top: -100,
+            right: -100,
+            child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+          ),
+          Positioned(
+            bottom: -150,
+            left: -150,
+            child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+          ),
           FutureBuilder<List<DessertModel>>(
             future: _dessertsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: primaryColor));
+                return const Center(
+                  child: CircularProgressIndicator(color: primaryColor),
+                );
               } else if (snapshot.hasError) {
-                return _ErrorState(errorMessage: snapshot.error.toString(), onRetry: _refreshDesserts);
+                return _ErrorState(
+                  errorMessage: snapshot.error.toString(),
+                  onRetry: _refreshDesserts,
+                );
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return _EmptyState(onRefresh: _refreshDesserts);
               } else {
@@ -76,7 +92,10 @@ class _DessertsListScreenState extends State<DessertsListScreen> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final dessert = snapshot.data![index];
-                      return _DessertCard(dessert: dessert, onTapped: () => _navigateToDetail(dessert.id));
+                      return _DessertCard(
+                        dessert: dessert,
+                        onTapped: () => _navigateToDetail(dessert.id),
+                      );
                     },
                   ),
                 );
@@ -94,7 +113,9 @@ class _DessertsListScreenState extends State<DessertsListScreen> {
   }
 
   void _navigateToDetail(int dessertId) async {
-    final result = await Navigator.of(context).pushNamed('/postres/detalle', arguments: dessertId);
+    final result = await Navigator.of(
+      context,
+    ).pushNamed('/postres/detalle', arguments: dessertId);
     if (result == true) {
       _refreshDesserts();
     }
@@ -116,7 +137,10 @@ class _DessertCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatCurrency = NumberFormat.simpleCurrency(locale: 'es_MX', decimalDigits: 2);
+    final formatCurrency = NumberFormat.simpleCurrency(
+      locale: 'es_MX',
+      decimalDigits: 2,
+    );
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
@@ -132,24 +156,56 @@ class _DessertCard extends StatelessWidget {
               CircleAvatar(
                 radius: 28,
                 backgroundColor: const Color(0xFFE91E63).withAlpha(30),
-                child: const Icon(Icons.cake_outlined, color: Color(0xFFE91E63), size: 28),
+                child: const Icon(
+                  Icons.cake_outlined,
+                  color: Color(0xFFE91E63),
+                  size: 28,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(dessert.nombre, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF333333))),
+                    Text(
+                      dessert.nombre,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.attach_money, size: 16, color: Colors.green[700]),
+                        Icon(
+                          Icons.attach_money,
+                          size: 16,
+                          color: Colors.green[700],
+                        ),
                         const SizedBox(width: 4),
-                        Text(formatCurrency.format(dessert.precio), style: TextStyle(fontSize: 14, color: Colors.green[800], fontWeight: FontWeight.w600)),
+                        Text(
+                          formatCurrency.format(dessert.precio),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.green[800],
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                         const SizedBox(width: 16),
-                        Icon(Icons.pie_chart_outline, size: 16, color: Colors.blue[700]),
+                        Icon(
+                          Icons.pie_chart_outline,
+                          size: 16,
+                          color: Colors.blue[700],
+                        ),
                         const SizedBox(width: 4),
-                        Text('${dessert.porciones} porciones', style: TextStyle(fontSize: 14, color: Colors.blue[800])),
+                        Text(
+                          '${dessert.porciones} porciones',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blue[800],
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -180,15 +236,25 @@ class _ErrorState extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, color: Colors.red, size: 50),
             const SizedBox(height: 16),
-            const Text('Ocurrió un error', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Ocurrió un error',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
-            Text(errorMessage, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(
+              errorMessage,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.grey),
+            ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
               label: const Text('Reintentar'),
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE91E63), foregroundColor: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFE91E63),
+                foregroundColor: Colors.white,
+              ),
             ),
           ],
         ),
@@ -210,13 +276,19 @@ class _EmptyState extends StatelessWidget {
         children: [
           const Icon(Icons.cake_outlined, size: 60, color: Colors.grey),
           const SizedBox(height: 16),
-          const Text('No hay postres registrados', style: TextStyle(fontSize: 18, color: Colors.grey)),
+          const Text(
+            'No hay postres registrados',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: onRefresh,
             icon: const Icon(Icons.add),
             label: const Text('Agregar Postre'),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE91E63), foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE91E63),
+              foregroundColor: Colors.white,
+            ),
           ),
         ],
       ),

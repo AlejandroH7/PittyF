@@ -67,10 +67,7 @@ class InicioScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(
                       'Tu pastelería de confianza',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[700],
-                      ),
+                      style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 60),
@@ -86,7 +83,9 @@ class InicioScreen extends StatelessWidget {
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0), // More rounded
+                            borderRadius: BorderRadius.circular(
+                              30.0,
+                            ), // More rounded
                           ),
                           elevation: 8,
                           shadowColor: primaryColor.withOpacity(0.4),
@@ -123,10 +122,7 @@ class Circle extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

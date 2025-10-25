@@ -20,7 +20,8 @@ class PedidoCompletoFormScreen extends StatefulWidget {
   static const String routeName = '/pedidos-completos/nuevo';
 
   @override
-  State<PedidoCompletoFormScreen> createState() => _PedidoCompletoFormScreenState();
+  State<PedidoCompletoFormScreen> createState() =>
+      _PedidoCompletoFormScreenState();
 }
 
 class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
@@ -44,8 +45,14 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
   }
 
   Future<_FormData> _loadFormData() async {
-    final results = await Future.wait([ClientsApi().getAllClients(), DessertsApi().getAllDesserts()]);
-    return _FormData(results[0] as List<ClientModel>, results[1] as List<DessertModel>);
+    final results = await Future.wait([
+      ClientsApi().getAllClients(),
+      DessertsApi().getAllDesserts(),
+    ]);
+    return _FormData(
+      results[0] as List<ClientModel>,
+      results[1] as List<DessertModel>,
+    );
   }
 
   @override
@@ -61,7 +68,8 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
     if (_selectedDessert != null && _cantidadController.text.isNotEmpty) {
       final cantidad = int.tryParse(_cantidadController.text);
       if (cantidad != null && cantidad > 0) {
-        _totalController.text = (cantidad * _selectedDessert!.precio).toStringAsFixed(2);
+        _totalController.text = (cantidad * _selectedDessert!.precio)
+            .toStringAsFixed(2);
       } else {
         _totalController.text = '0.00';
       }
@@ -84,7 +92,13 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
       );
       if (pickedTime != null) {
         setState(() {
-          _selectedDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+          _selectedDate = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
         });
       }
     }
@@ -93,7 +107,12 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
   Future<void> _savePedido() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Por favor, seleccione una fecha de entrega.'), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, seleccione una fecha de entrega.'),
+          backgroundColor: Colors.red,
+        ),
+      );
       return;
     }
 
@@ -111,12 +130,22 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
     try {
       await PedidoCompletoApi().createPedidoCompleto(requestModel);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pedido creado exitosamente!'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pedido creado exitosamente!'),
+            backgroundColor: Colors.green,
+          ),
+        );
         Navigator.of(context).pop(true);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error al crear el pedido: $e'), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al crear el pedido: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } finally {
       if (mounted) {
@@ -133,7 +162,10 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Nuevo Pedido', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Nuevo Pedido',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
@@ -141,21 +173,35 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
         future: _formDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: primaryColor));
+            return const Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            );
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Error cargando datos: ${snapshot.error}'));
+            return Center(
+              child: Text('Error cargando datos: ${snapshot.error}'),
+            );
           }
           if (!snapshot.hasData) {
-            return const Center(child: Text('No se pudieron cargar los datos.'));
+            return const Center(
+              child: Text('No se pudieron cargar los datos.'),
+            );
           }
 
           final formData = snapshot.data!;
 
           return Stack(
             children: [
-              Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-              Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+              Positioned(
+                top: -100,
+                right: -100,
+                child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+              ),
+              Positioned(
+                bottom: -150,
+                left: -150,
+                child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+              ),
               Form(
                 key: _formKey,
                 child: ListView(
@@ -163,24 +209,43 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
                   children: [
                     _buildDropdownFormField<int>(
                       value: _selectedClientId,
-                      items: formData.clients.map((c) => DropdownMenuItem<int>(value: c.id, child: Text(c.nombre))).toList(),
+                      items:
+                          formData.clients
+                              .map(
+                                (c) => DropdownMenuItem<int>(
+                                  value: c.id,
+                                  child: Text(c.nombre),
+                                ),
+                              )
+                              .toList(),
                       onChanged: (v) => setState(() => _selectedClientId = v),
                       label: 'Cliente',
                       icon: Icons.person_outline,
-                      validator: (v) => v == null ? 'Seleccione un cliente' : null,
+                      validator:
+                          (v) => v == null ? 'Seleccione un cliente' : null,
                     ),
                     const SizedBox(height: 16),
                     _buildDropdownFormField<DessertModel>(
                       value: _selectedDessert,
-                      items: formData.desserts.map((p) => DropdownMenuItem<DessertModel>(value: p, child: Text(p.nombre))).toList(),
-                      onChanged: (v) => setState(() {
-                        _selectedDessert = v;
-                        _calculateTotal();
-                        _formKey.currentState?.validate();
-                      }),
+                      items:
+                          formData.desserts
+                              .map(
+                                (p) => DropdownMenuItem<DessertModel>(
+                                  value: p,
+                                  child: Text(p.nombre),
+                                ),
+                              )
+                              .toList(),
+                      onChanged:
+                          (v) => setState(() {
+                            _selectedDessert = v;
+                            _calculateTotal();
+                            _formKey.currentState?.validate();
+                          }),
                       label: 'Postre',
                       icon: Icons.cake_outlined,
-                      validator: (v) => v == null ? 'Seleccione un postre' : null,
+                      validator:
+                          (v) => v == null ? 'Seleccione un postre' : null,
                     ),
                     const SizedBox(height: 16),
                     _buildTextFormField(
@@ -190,10 +255,13 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Ingrese una cantidad';
+                        if (v == null || v.isEmpty)
+                          return 'Ingrese una cantidad';
                         final n = int.tryParse(v);
                         if (n == null || n <= 0) return 'Debe ser > 0';
-                        if (_selectedDessert != null && n > _selectedDessert!.porciones) return 'Stock: ${_selectedDessert!.porciones}';
+                        if (_selectedDessert != null &&
+                            n > _selectedDessert!.porciones)
+                          return 'Stock: ${_selectedDessert!.porciones}';
                         return null;
                       },
                     ),
@@ -215,7 +283,9 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
                     _buildDatePickerField(),
                     const SizedBox(height: 32),
                     if (_isLoading)
-                      const Center(child: CircularProgressIndicator(color: primaryColor))
+                      const Center(
+                        child: CircularProgressIndicator(color: primaryColor),
+                      )
                     else
                       Column(
                         children: [
@@ -225,13 +295,23 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
                               icon: const Icon(Icons.save_alt_outlined),
                               onPressed: _savePedido,
                               label: const Text('Guardar Pedido'),
-                              style: ElevatedButton.styleFrom(backgroundColor: primaryColor, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), minimumSize: const Size(double.infinity, 50)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryColor,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                minimumSize: const Size(double.infinity, 50),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 12),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Cancelar', style: TextStyle(color: primaryColor)),
+                            child: const Text(
+                              'Cancelar',
+                              style: TextStyle(color: primaryColor),
+                            ),
                           ),
                         ],
                       ),
@@ -251,7 +331,10 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: 'Fecha de Entrega',
-          prefixIcon: const Icon(Icons.calendar_today_outlined, color: Color(0xFFE91E63)),
+          prefixIcon: const Icon(
+            Icons.calendar_today_outlined,
+            color: Color(0xFFE91E63),
+          ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -265,8 +348,13 @@ class _PedidoCompletoFormScreenState extends State<PedidoCompletoFormScreen> {
           fillColor: Colors.white,
         ),
         child: Text(
-          _selectedDate == null ? 'Toca para seleccionar' : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
-          style: TextStyle(fontSize: 16, color: _selectedDate == null ? Colors.grey[600] : Colors.black87),
+          _selectedDate == null
+              ? 'Toca para seleccionar'
+              : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
+          style: TextStyle(
+            fontSize: 16,
+            color: _selectedDate == null ? Colors.grey[600] : Colors.black87,
+          ),
         ),
       ),
     );

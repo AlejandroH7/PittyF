@@ -92,7 +92,9 @@ class _EventEditScreenState extends State<EventEditScreen> {
     if (_selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Por favor, seleccione una fecha y hora para el evento.'),
+          content: Text(
+            'Por favor, seleccione una fecha y hora para el evento.',
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -107,22 +109,34 @@ class _EventEditScreenState extends State<EventEditScreen> {
       nombre: _nombreController.text,
       titulo: _tituloController.text,
       fecha: _selectedDate!.toUtc().toIso8601String(),
-      descripcion: _descripcionController.text.isNotEmpty ? _descripcionController.text : null,
-      ubicacion: _ubicacionController.text.isNotEmpty ? _ubicacionController.text : null,
+      descripcion:
+          _descripcionController.text.isNotEmpty
+              ? _descripcionController.text
+              : null,
+      ubicacion:
+          _ubicacionController.text.isNotEmpty
+              ? _ubicacionController.text
+              : null,
     );
 
     try {
       await EventsApi().updateEvent(_event!.id, requestModel);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Evento actualizado exitosamente!'), backgroundColor: Colors.green),
+          const SnackBar(
+            content: Text('Evento actualizado exitosamente!'),
+            backgroundColor: Colors.green,
+          ),
         );
         Navigator.of(context).pop(true); // Indicate success
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al actualizar el evento: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Error al actualizar el evento: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -142,14 +156,25 @@ class _EventEditScreenState extends State<EventEditScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Editar Evento', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Editar Evento',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
       body: Stack(
         children: [
-          Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-          Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+          Positioned(
+            top: -100,
+            right: -100,
+            child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+          ),
+          Positioned(
+            bottom: -150,
+            left: -150,
+            child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+          ),
           Form(
             key: _formKey,
             child: ListView(
@@ -161,7 +186,8 @@ class _EventEditScreenState extends State<EventEditScreen> {
                   label: 'Título del Evento',
                   icon: Icons.title,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Ingrese el título del evento';
+                    if (value == null || value.isEmpty)
+                      return 'Ingrese el título del evento';
                     return null;
                   },
                 ),
@@ -171,7 +197,8 @@ class _EventEditScreenState extends State<EventEditScreen> {
                   label: 'Evento solicitado por',
                   icon: Icons.person_outline,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Ingrese el nombre del cliente';
+                    if (value == null || value.isEmpty)
+                      return 'Ingrese el nombre del cliente';
                     return null;
                   },
                 ),
@@ -192,7 +219,9 @@ class _EventEditScreenState extends State<EventEditScreen> {
                 ),
                 const SizedBox(height: 32),
                 if (_isLoading)
-                  const Center(child: CircularProgressIndicator(color: primaryColor))
+                  const Center(
+                    child: CircularProgressIndicator(color: primaryColor),
+                  )
                 else
                   Column(
                     children: [
@@ -206,7 +235,9 @@ class _EventEditScreenState extends State<EventEditScreen> {
                             backgroundColor: primaryColor,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
                             elevation: 8,
                           ),
                         ),
@@ -214,7 +245,10 @@ class _EventEditScreenState extends State<EventEditScreen> {
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text('Cancelar', style: TextStyle(color: primaryColor)),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(color: primaryColor),
+                        ),
                       ),
                     ],
                   ),
@@ -232,7 +266,10 @@ class _EventEditScreenState extends State<EventEditScreen> {
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: 'Fecha y Hora del Evento',
-          prefixIcon: const Icon(Icons.calendar_today_outlined, color: Color(0xFFE91E63)),
+          prefixIcon: const Icon(
+            Icons.calendar_today_outlined,
+            color: Color(0xFFE91E63),
+          ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -246,8 +283,13 @@ class _EventEditScreenState extends State<EventEditScreen> {
           fillColor: Colors.white,
         ),
         child: Text(
-          _selectedDate == null ? 'Toca para seleccionar' : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
-          style: TextStyle(fontSize: 16, color: _selectedDate == null ? Colors.grey[600] : Colors.black87),
+          _selectedDate == null
+              ? 'Toca para seleccionar'
+              : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
+          style: TextStyle(
+            fontSize: 16,
+            color: _selectedDate == null ? Colors.grey[600] : Colors.black87,
+          ),
         ),
       ),
     );

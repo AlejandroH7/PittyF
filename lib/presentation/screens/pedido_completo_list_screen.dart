@@ -10,7 +10,8 @@ class PedidoCompletoListScreen extends StatefulWidget {
   static const String routeName = '/pedidos-completos';
 
   @override
-  State<PedidoCompletoListScreen> createState() => _PedidoCompletoListScreenState();
+  State<PedidoCompletoListScreen> createState() =>
+      _PedidoCompletoListScreenState();
 }
 
 class _PedidoCompletoListScreenState extends State<PedidoCompletoListScreen> {
@@ -57,19 +58,32 @@ class _PedidoCompletoListScreenState extends State<PedidoCompletoListScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Pedidos', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Pedidos',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
       body: Stack(
         children: [
-          Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-          Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+          Positioned(
+            top: -100,
+            right: -100,
+            child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+          ),
+          Positioned(
+            bottom: -150,
+            left: -150,
+            child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+          ),
           FutureBuilder<List<PedidoCompletoModel>>(
             future: _pedidosFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: primaryColor));
+                return const Center(
+                  child: CircularProgressIndicator(color: primaryColor),
+                );
               } else if (snapshot.hasError) {
                 return Center(
                   child: Column(
@@ -126,7 +140,9 @@ class _PedidoCompletoListScreenState extends State<PedidoCompletoListScreen> {
                           ),
                           trailing: Text(_formatDate(pedido.fechaEntrega)),
                           onTap: () async {
-                            final result = await Navigator.of(context).pushNamed(
+                            final result = await Navigator.of(
+                              context,
+                            ).pushNamed(
                               '/pedidos-completos/detalle',
                               arguments: pedido.id,
                             );
@@ -146,7 +162,9 @@ class _PedidoCompletoListScreenState extends State<PedidoCompletoListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final result = await Navigator.of(context).pushNamed(PedidoCompletoFormScreen.routeName);
+          final result = await Navigator.of(
+            context,
+          ).pushNamed(PedidoCompletoFormScreen.routeName);
           if (result == true) {
             await _refreshPedidos();
           }

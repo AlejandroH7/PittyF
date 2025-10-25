@@ -43,7 +43,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     if (_eventId == null) {
       return Scaffold(
         backgroundColor: backgroundColor,
-        appBar: AppBar(title: const Text('Error'), backgroundColor: primaryColor, foregroundColor: Colors.white),
+        appBar: AppBar(
+          title: const Text('Error'),
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+        ),
         body: const Center(child: Text('ID de evento no proporcionado.')),
       );
     }
@@ -51,27 +55,45 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return FutureBuilder<EventModel>(
       future: _eventDetailFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting &&
+            !snapshot.hasData) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: const Center(child: CircularProgressIndicator(color: primaryColor)),
+            appBar: AppBar(
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: const Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            ),
           );
         }
 
         if (snapshot.hasError) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(title: const Text('Error'), backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: Center(child: Text('Error al cargar el evento: ${snapshot.error}')),
+            appBar: AppBar(
+              title: const Text('Error'),
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: Center(
+              child: Text('Error al cargar el evento: ${snapshot.error}'),
+            ),
           );
         }
 
         if (!snapshot.hasData) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(title: const Text('No Encontrado'), backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: const Center(child: Text('No se encontraron detalles del evento.')),
+            appBar: AppBar(
+              title: const Text('No Encontrado'),
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: const Center(
+              child: Text('No se encontraron detalles del evento.'),
+            ),
           );
         }
 
@@ -88,22 +110,52 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Text(event.titulo, style: const TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+                  title: Text(
+                    event.titulo,
+                    style: const TextStyle(
+                      fontFamily: 'Georgia',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   background: Stack(
                     fit: StackFit.expand,
                     children: [
                       Container(color: primaryColor.withAlpha(50)),
-                      Positioned(top: -50, left: -50, child: _Circle(color: Colors.white.withAlpha(20), size: 200)),
-                      Positioned(bottom: -80, right: -80, child: _Circle(color: Colors.white.withAlpha(25), size: 300)),
+                      Positioned(
+                        top: -50,
+                        left: -50,
+                        child: _Circle(
+                          color: Colors.white.withAlpha(20),
+                          size: 200,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: -80,
+                        right: -80,
+                        child: _Circle(
+                          color: Colors.white.withAlpha(25),
+                          size: 300,
+                        ),
+                      ),
                       const Center(
-                        child: Icon(Icons.celebration_outlined, color: Colors.white, size: 100),
+                        child: Icon(
+                          Icons.celebration_outlined,
+                          color: Colors.white,
+                          size: 100,
+                        ),
                       ),
                     ],
                   ),
                 ),
                 actions: [
-                  IconButton(icon: const Icon(Icons.edit), onPressed: () => _editEvent(event)),
-                  IconButton(icon: const Icon(Icons.delete), onPressed: () => _deleteEvent(event)),
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _editEvent(event),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _deleteEvent(event),
+                  ),
                 ],
               ),
               SliverToBoxAdapter(
@@ -114,26 +166,58 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                       _InfoCard(
                         title: 'Información del Evento',
                         children: [
-                          _DetailRow(icon: Icons.person_outline, label: 'Solicitado por', value: event.nombre),
-                          _DetailRow(icon: Icons.calendar_today, label: 'Fecha', value: _formatDate(event.fecha)),
-                          _DetailRow(icon: Icons.location_on_outlined, label: 'Ubicación', value: event.ubicacion ?? 'N/A'),
+                          _DetailRow(
+                            icon: Icons.person_outline,
+                            label: 'Solicitado por',
+                            value: event.nombre,
+                          ),
+                          _DetailRow(
+                            icon: Icons.calendar_today,
+                            label: 'Fecha',
+                            value: _formatDate(event.fecha),
+                          ),
+                          _DetailRow(
+                            icon: Icons.location_on_outlined,
+                            label: 'Ubicación',
+                            value: event.ubicacion ?? 'N/A',
+                          ),
                         ],
                       ),
-                      if (event.descripcion != null && event.descripcion!.isNotEmpty)
+                      if (event.descripcion != null &&
+                          event.descripcion!.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 16.0),
                           child: _InfoCard(
                             title: 'Descripción',
-                            children: [_DetailRow(icon: Icons.notes_outlined, label: 'Descripción', value: event.descripcion!, isSingle: true)],
+                            children: [
+                              _DetailRow(
+                                icon: Icons.notes_outlined,
+                                label: 'Descripción',
+                                value: event.descripcion!,
+                                isSingle: true,
+                              ),
+                            ],
                           ),
                         ),
                       const SizedBox(height: 16),
                       _InfoCard(
                         title: 'Información del Sistema',
                         children: [
-                          _DetailRow(icon: Icons.fingerprint, label: 'ID de Evento', value: event.id.toString()),
-                          _DetailRow(icon: Icons.calendar_today_outlined, label: 'Fecha de Creación', value: _formatDate(event.createdAt)),
-                          _DetailRow(icon: Icons.calendar_today, label: 'Última Actualización', value: _formatDate(event.updatedAt)),
+                          _DetailRow(
+                            icon: Icons.fingerprint,
+                            label: 'ID de Evento',
+                            value: event.id.toString(),
+                          ),
+                          _DetailRow(
+                            icon: Icons.calendar_today_outlined,
+                            label: 'Fecha de Creación',
+                            value: _formatDate(event.createdAt),
+                          ),
+                          _DetailRow(
+                            icon: Icons.calendar_today,
+                            label: 'Última Actualización',
+                            value: _formatDate(event.updatedAt),
+                          ),
                         ],
                       ),
                     ],
@@ -151,31 +235,55 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     if (dateString == null || dateString.isEmpty) return 'N/A';
     try {
       final dateTime = DateTime.parse(dateString).toLocal();
-      return DateFormat('EEEE, dd MMMM yyyy, hh:mm a', 'es_MX').format(dateTime);
+      return DateFormat(
+        'EEEE, dd MMMM yyyy, hh:mm a',
+        'es_MX',
+      ).format(dateTime);
     } catch (e) {
       return dateString;
     }
   }
 
   void _editEvent(EventModel event) async {
-    final result = await Navigator.of(context).pushNamed(EventEditScreen.routeName, arguments: event);
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(EventEditScreen.routeName, arguments: event);
     if (result == true && mounted) {
       _refreshEventDetails();
-      ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(const SnackBar(content: Text('Evento actualizado'), backgroundColor: Colors.green));
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Evento actualizado'),
+            backgroundColor: Colors.green,
+          ),
+        );
     }
   }
 
   void _deleteEvent(EventModel event) async {
     final bool? confirmDelete = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmar Eliminación'),
-        content: Text('¿Estás seguro de que quieres eliminar el evento "${event.titulo}"?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancelar')),
-          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Eliminar', style: TextStyle(color: Colors.red))),
-        ],
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirmar Eliminación'),
+            content: Text(
+              '¿Estás seguro de que quieres eliminar el evento "${event.titulo}"?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text(
+                  'Eliminar',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
     );
 
     if (confirmDelete == true && mounted) {
@@ -187,12 +295,20 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       } on DioException catch (e) {
         final messenger = ScaffoldMessenger.of(context);
         messenger.removeCurrentSnackBar();
-        String errorMessage = e.response?.data?['message'] ?? 'Error al eliminar el evento.';
-        messenger.showSnackBar(SnackBar(content: Text(errorMessage), backgroundColor: Colors.red));
+        String errorMessage =
+            e.response?.data?['message'] ?? 'Error al eliminar el evento.';
+        messenger.showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
       } catch (e) {
         final messenger = ScaffoldMessenger.of(context);
         messenger.removeCurrentSnackBar();
-        messenger.showSnackBar(SnackBar(content: Text('Un error inesperado ocurrió: $e'), backgroundColor: Colors.red));
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Un error inesperado ocurrió: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -213,7 +329,14 @@ class _InfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFE91E63))),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFE91E63),
+              ),
+            ),
             const Divider(height: 20, thickness: 1),
             ...children,
           ],
@@ -229,14 +352,20 @@ class _DetailRow extends StatelessWidget {
   final String value;
   final bool isSingle;
 
-  const _DetailRow({required this.icon, required this.label, required this.value, this.isSingle = false});
+  const _DetailRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.isSingle = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: isSingle ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment:
+            isSingle ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
           Icon(icon, color: Colors.grey[600], size: 20),
           const SizedBox(width: 16),
@@ -244,9 +373,19 @@ class _DetailRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (!isSingle) Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54)),
+                if (!isSingle)
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black54,
+                    ),
+                  ),
                 if (!isSingle) const SizedBox(height: 2),
-                Text(value, style: const TextStyle(fontSize: 16, color: Colors.black87)),
+                Text(
+                  value,
+                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                ),
               ],
             ),
           ),

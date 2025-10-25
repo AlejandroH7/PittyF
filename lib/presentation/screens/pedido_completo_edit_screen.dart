@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +20,8 @@ class PedidoCompletoEditScreen extends StatefulWidget {
   static const String routeName = '/pedidos-completos/editar';
 
   @override
-  State<PedidoCompletoEditScreen> createState() => _PedidoCompletoEditScreenState();
+  State<PedidoCompletoEditScreen> createState() =>
+      _PedidoCompletoEditScreenState();
 }
 
 class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
@@ -49,7 +49,8 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_pedido == null) {
-      final pedido = ModalRoute.of(context)?.settings.arguments as PedidoCompletoModel?;
+      final pedido =
+          ModalRoute.of(context)?.settings.arguments as PedidoCompletoModel?;
       if (pedido != null) {
         _pedido = pedido;
         _populateForm(pedido);
@@ -66,8 +67,14 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
   }
 
   Future<_FormData> _loadFormData() async {
-    final results = await Future.wait([ClientsApi().getAllClients(), DessertsApi().getAllDesserts()]);
-    return _FormData(results[0] as List<ClientModel>, results[1] as List<DessertModel>);
+    final results = await Future.wait([
+      ClientsApi().getAllClients(),
+      DessertsApi().getAllDesserts(),
+    ]);
+    return _FormData(
+      results[0] as List<ClientModel>,
+      results[1] as List<DessertModel>,
+    );
   }
 
   @override
@@ -83,7 +90,8 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
     if (_selectedDessert != null && _cantidadController.text.isNotEmpty) {
       final cantidad = int.tryParse(_cantidadController.text);
       if (cantidad != null && cantidad > 0) {
-        _totalController.text = (cantidad * _selectedDessert!.precio).toStringAsFixed(2);
+        _totalController.text = (cantidad * _selectedDessert!.precio)
+            .toStringAsFixed(2);
       } else {
         _totalController.text = '0.00';
       }
@@ -106,7 +114,13 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
       );
       if (pickedTime != null) {
         setState(() {
-          _selectedDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute);
+          _selectedDate = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
         });
       }
     }
@@ -115,7 +129,12 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
   Future<void> _updatePedido() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Seleccione una fecha'), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Seleccione una fecha'),
+          backgroundColor: Colors.red,
+        ),
+      );
       return;
     }
 
@@ -133,12 +152,19 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
     try {
       await PedidoCompletoApi().updatePedidoCompleto(_pedido!.id, requestModel);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pedido actualizado!'), backgroundColor: Colors.green));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pedido actualizado!'),
+            backgroundColor: Colors.green,
+          ),
+        );
         Navigator.of(context).pop(true);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
       }
     } finally {
       if (mounted) {
@@ -155,7 +181,10 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Editar Pedido', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Editar Pedido',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
@@ -163,24 +192,41 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
         future: _formDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: primaryColor));
+            return const Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            );
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Error cargando datos: ${snapshot.error}'));
+            return Center(
+              child: Text('Error cargando datos: ${snapshot.error}'),
+            );
           }
           if (!snapshot.hasData) {
-            return const Center(child: Text('No se pudieron cargar los datos.'));
+            return const Center(
+              child: Text('No se pudieron cargar los datos.'),
+            );
           }
 
           final formData = snapshot.data!;
           if (_selectedDessert == null && _pedido != null) {
-            _selectedDessert = formData.desserts.firstWhere((d) => d.id == _pedido!.postreId, orElse: () => formData.desserts.first);
+            _selectedDessert = formData.desserts.firstWhere(
+              (d) => d.id == _pedido!.postreId,
+              orElse: () => formData.desserts.first,
+            );
           }
 
           return Stack(
             children: [
-              Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-              Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+              Positioned(
+                top: -100,
+                right: -100,
+                child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+              ),
+              Positioned(
+                bottom: -150,
+                left: -150,
+                child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+              ),
               Form(
                 key: _formKey,
                 child: ListView(
@@ -188,24 +234,43 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                   children: [
                     _buildDropdownFormField<int>(
                       value: _selectedClientId,
-                      items: formData.clients.map((c) => DropdownMenuItem<int>(value: c.id, child: Text(c.nombre))).toList(),
+                      items:
+                          formData.clients
+                              .map(
+                                (c) => DropdownMenuItem<int>(
+                                  value: c.id,
+                                  child: Text(c.nombre),
+                                ),
+                              )
+                              .toList(),
                       onChanged: (v) => setState(() => _selectedClientId = v),
                       label: 'Cliente',
                       icon: Icons.person_outline,
-                      validator: (v) => v == null ? 'Seleccione un cliente' : null,
+                      validator:
+                          (v) => v == null ? 'Seleccione un cliente' : null,
                     ),
                     const SizedBox(height: 16),
                     _buildDropdownFormField<DessertModel>(
                       value: _selectedDessert,
-                      items: formData.desserts.map((p) => DropdownMenuItem<DessertModel>(value: p, child: Text(p.nombre))).toList(),
-                      onChanged: (v) => setState(() {
-                        _selectedDessert = v;
-                        _calculateTotal();
-                        _formKey.currentState?.validate();
-                      }),
+                      items:
+                          formData.desserts
+                              .map(
+                                (p) => DropdownMenuItem<DessertModel>(
+                                  value: p,
+                                  child: Text(p.nombre),
+                                ),
+                              )
+                              .toList(),
+                      onChanged:
+                          (v) => setState(() {
+                            _selectedDessert = v;
+                            _calculateTotal();
+                            _formKey.currentState?.validate();
+                          }),
                       label: 'Postre',
                       icon: Icons.cake_outlined,
-                      validator: (v) => v == null ? 'Seleccione un postre' : null,
+                      validator:
+                          (v) => v == null ? 'Seleccione un postre' : null,
                     ),
                     const SizedBox(height: 16),
                     _buildTextFormField(
@@ -215,12 +280,15 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (v) {
-                        if (v == null || v.isEmpty) return 'Ingrese una cantidad';
+                        if (v == null || v.isEmpty)
+                          return 'Ingrese una cantidad';
                         final n = int.tryParse(v);
                         if (n == null || n <= 0) return 'Debe ser > 0';
                         if (_selectedDessert != null && _pedido != null) {
-                          final effectiveStock = _selectedDessert!.porciones + _pedido!.cantidad;
-                          if (n > effectiveStock) return 'Stock: $effectiveStock';
+                          final effectiveStock =
+                              _selectedDessert!.porciones + _pedido!.cantidad;
+                          if (n > effectiveStock)
+                            return 'Stock: $effectiveStock';
                         }
                         return null;
                       },
@@ -243,7 +311,9 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                     _buildDatePickerField(),
                     const SizedBox(height: 32),
                     if (_isLoading)
-                      const Center(child: CircularProgressIndicator(color: primaryColor))
+                      const Center(
+                        child: CircularProgressIndicator(color: primaryColor),
+                      )
                     else
                       Column(
                         children: [
@@ -253,13 +323,23 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
                               icon: const Icon(Icons.save_alt_outlined),
                               onPressed: _updatePedido,
                               label: const Text('Guardar Cambios'),
-                              style: ElevatedButton.styleFrom(backgroundColor: primaryColor, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16), minimumSize: const Size(double.infinity, 50)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryColor,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                minimumSize: const Size(double.infinity, 50),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 12),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Cancelar', style: TextStyle(color: primaryColor)),
+                            child: const Text(
+                              'Cancelar',
+                              style: TextStyle(color: primaryColor),
+                            ),
                           ),
                         ],
                       ),
@@ -279,7 +359,10 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: 'Fecha de Entrega',
-          prefixIcon: const Icon(Icons.calendar_today_outlined, color: Color(0xFFE91E63)),
+          prefixIcon: const Icon(
+            Icons.calendar_today_outlined,
+            color: Color(0xFFE91E63),
+          ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -293,8 +376,13 @@ class _PedidoCompletoEditScreenState extends State<PedidoCompletoEditScreen> {
           fillColor: Colors.white,
         ),
         child: Text(
-          _selectedDate == null ? 'Toca para seleccionar' : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
-          style: TextStyle(fontSize: 16, color: _selectedDate == null ? Colors.grey[600] : Colors.black87),
+          _selectedDate == null
+              ? 'Toca para seleccionar'
+              : DateFormat('dd/MM/yyyy hh:mm a').format(_selectedDate!),
+          style: TextStyle(
+            fontSize: 16,
+            color: _selectedDate == null ? Colors.grey[600] : Colors.black87,
+          ),
         ),
       ),
     );

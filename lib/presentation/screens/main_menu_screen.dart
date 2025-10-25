@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -63,7 +62,9 @@ class MainMenuScreen extends StatelessWidget {
                 _MenuCard(
                   title: 'Pedidos',
                   icon: Icons.receipt_long_outlined,
-                  onTap: () => Navigator.of(context).pushNamed('/pedidos-completos'),
+                  onTap:
+                      () =>
+                          Navigator.of(context).pushNamed('/pedidos-completos'),
                   color: primaryColor,
                 ),
                 _MenuCard(
@@ -137,10 +138,7 @@ class Circle extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

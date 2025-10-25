@@ -51,21 +51,37 @@ class _EventsListScreenState extends State<EventsListScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Eventos', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Eventos',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
       body: Stack(
         children: [
-          Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-          Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+          Positioned(
+            top: -100,
+            right: -100,
+            child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+          ),
+          Positioned(
+            bottom: -150,
+            left: -150,
+            child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+          ),
           FutureBuilder<List<EventModel>>(
             future: _eventsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: primaryColor));
+                return const Center(
+                  child: CircularProgressIndicator(color: primaryColor),
+                );
               } else if (snapshot.hasError) {
-                return _ErrorState(errorMessage: snapshot.error.toString(), onRetry: _refreshEvents);
+                return _ErrorState(
+                  errorMessage: snapshot.error.toString(),
+                  onRetry: _refreshEvents,
+                );
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return _EmptyState(onRefresh: _navigateAndRefresh);
               } else {
@@ -77,7 +93,10 @@ class _EventsListScreenState extends State<EventsListScreen> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final event = snapshot.data![index];
-                      return _EventCard(event: event, onTapped: () => _navigateToDetail(event.id));
+                      return _EventCard(
+                        event: event,
+                        onTapped: () => _navigateToDetail(event.id),
+                      );
                     },
                   ),
                 );
@@ -95,14 +114,18 @@ class _EventsListScreenState extends State<EventsListScreen> {
   }
 
   void _navigateToDetail(int eventId) async {
-    final result = await Navigator.of(context).pushNamed('/eventos/detalle', arguments: eventId);
+    final result = await Navigator.of(
+      context,
+    ).pushNamed('/eventos/detalle', arguments: eventId);
     if (result == true) {
       _refreshEvents();
     }
   }
 
   void _navigateAndRefresh() async {
-    final result = await Navigator.of(context).pushNamed(EventFormScreen.routeName);
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(EventFormScreen.routeName);
     if (result == true) {
       _refreshEvents();
     }
@@ -143,13 +166,21 @@ class _EventCard extends StatelessWidget {
                   CircleAvatar(
                     radius: 24,
                     backgroundColor: const Color(0xFFE91E63).withAlpha(30),
-                    child: const Icon(Icons.celebration_outlined, color: Color(0xFFE91E63), size: 26),
+                    child: const Icon(
+                      Icons.celebration_outlined,
+                      color: Color(0xFFE91E63),
+                      size: 26,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       event.titulo,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF333333)),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -157,11 +188,23 @@ class _EventCard extends StatelessWidget {
                 ],
               ),
               const Divider(height: 24, thickness: 1),
-              _InfoRow(icon: Icons.person_outline, title: 'Solicitado por:', value: event.nombre),
+              _InfoRow(
+                icon: Icons.person_outline,
+                title: 'Solicitado por:',
+                value: event.nombre,
+              ),
               const SizedBox(height: 8),
-              _InfoRow(icon: Icons.calendar_today_outlined, title: 'Fecha:', value: _formatDate(event.fecha)),
+              _InfoRow(
+                icon: Icons.calendar_today_outlined,
+                title: 'Fecha:',
+                value: _formatDate(event.fecha),
+              ),
               const SizedBox(height: 8),
-              _InfoRow(icon: Icons.location_on_outlined, title: 'Ubicación:', value: event.ubicacion ?? 'No especificada'),
+              _InfoRow(
+                icon: Icons.location_on_outlined,
+                title: 'Ubicación:',
+                value: event.ubicacion ?? 'No especificada',
+              ),
             ],
           ),
         ),
@@ -175,7 +218,11 @@ class _InfoRow extends StatelessWidget {
   final String title;
   final String value;
 
-  const _InfoRow({required this.icon, required this.title, required this.value});
+  const _InfoRow({
+    required this.icon,
+    required this.title,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +235,10 @@ class _InfoRow extends StatelessWidget {
           child: Text(
             value,
             textAlign: TextAlign.right,
-            style: const TextStyle(fontWeight: FontWeight.normal, color: Color(0xFF333333)),
+            style: const TextStyle(
+              fontWeight: FontWeight.normal,
+              color: Color(0xFF333333),
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -213,15 +263,25 @@ class _ErrorState extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, color: Colors.red, size: 50),
             const SizedBox(height: 16),
-            const Text('Ocurrió un error', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Ocurrió un error',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
-            Text(errorMessage, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(
+              errorMessage,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.grey),
+            ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
               label: const Text('Reintentar'),
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE91E63), foregroundColor: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFE91E63),
+                foregroundColor: Colors.white,
+              ),
             ),
           ],
         ),
@@ -243,13 +303,19 @@ class _EmptyState extends StatelessWidget {
         children: [
           const Icon(Icons.celebration_outlined, size: 60, color: Colors.grey),
           const SizedBox(height: 16),
-          const Text('No hay eventos registrados', style: TextStyle(fontSize: 18, color: Colors.grey)),
+          const Text(
+            'No hay eventos registrados',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: onRefresh,
             icon: const Icon(Icons.add),
             label: const Text('Agregar Evento'),
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFE91E63), foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE91E63),
+              foregroundColor: Colors.white,
+            ),
           ),
         ],
       ),

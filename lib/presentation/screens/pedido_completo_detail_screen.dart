@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,10 +11,12 @@ class PedidoCompletoDetailScreen extends StatefulWidget {
   static const String routeName = '/pedidos-completos/detalle';
 
   @override
-  State<PedidoCompletoDetailScreen> createState() => _PedidoCompletoDetailScreenState();
+  State<PedidoCompletoDetailScreen> createState() =>
+      _PedidoCompletoDetailScreenState();
 }
 
-class _PedidoCompletoDetailScreenState extends State<PedidoCompletoDetailScreen> {
+class _PedidoCompletoDetailScreenState
+    extends State<PedidoCompletoDetailScreen> {
   late Future<PedidoCompletoModel> _pedidoDetailFuture;
   final PedidoCompletoApi _pedidosApi = PedidoCompletoApi();
   int? _pedidoId;
@@ -44,7 +45,11 @@ class _PedidoCompletoDetailScreenState extends State<PedidoCompletoDetailScreen>
     if (_pedidoId == null) {
       return Scaffold(
         backgroundColor: backgroundColor,
-        appBar: AppBar(title: const Text('Error'), backgroundColor: primaryColor, foregroundColor: Colors.white),
+        appBar: AppBar(
+          title: const Text('Error'),
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+        ),
         body: const Center(child: Text('ID de pedido no proporcionado.')),
       );
     }
@@ -52,27 +57,46 @@ class _PedidoCompletoDetailScreenState extends State<PedidoCompletoDetailScreen>
     return FutureBuilder<PedidoCompletoModel>(
       future: _pedidoDetailFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting &&
+            !snapshot.hasData) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(title: const Text('Cargando...'), backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: const Center(child: CircularProgressIndicator(color: primaryColor)),
+            appBar: AppBar(
+              title: const Text('Cargando...'),
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: const Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            ),
           );
         }
 
         if (snapshot.hasError) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(title: const Text('Error'), backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: Center(child: Text('Error al cargar el pedido: ${snapshot.error}')),
+            appBar: AppBar(
+              title: const Text('Error'),
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: Center(
+              child: Text('Error al cargar el pedido: ${snapshot.error}'),
+            ),
           );
         }
 
         if (!snapshot.hasData) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(title: const Text('No Encontrado'), backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: const Center(child: Text('No se encontraron detalles del pedido.')),
+            appBar: AppBar(
+              title: const Text('No Encontrado'),
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: const Center(
+              child: Text('No se encontraron detalles del pedido.'),
+            ),
           );
         }
 
@@ -81,18 +105,38 @@ class _PedidoCompletoDetailScreenState extends State<PedidoCompletoDetailScreen>
         return Scaffold(
           backgroundColor: backgroundColor,
           appBar: AppBar(
-            title: Text('Pedido #${pedido.id}', style: const TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+            title: Text(
+              'Pedido #${pedido.id}',
+              style: const TextStyle(
+                fontFamily: 'Georgia',
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             backgroundColor: primaryColor,
             foregroundColor: Colors.white,
             actions: [
-              IconButton(icon: const Icon(Icons.edit), onPressed: () => _editPedido(pedido)),
-              IconButton(icon: const Icon(Icons.delete), onPressed: () => _deletePedido(pedido)),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () => _editPedido(pedido),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () => _deletePedido(pedido),
+              ),
             ],
           ),
           body: Stack(
             children: [
-              Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-              Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+              Positioned(
+                top: -100,
+                right: -100,
+                child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+              ),
+              Positioned(
+                bottom: -150,
+                left: -150,
+                child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+              ),
               SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -100,23 +144,46 @@ class _PedidoCompletoDetailScreenState extends State<PedidoCompletoDetailScreen>
                     _InfoCard(
                       title: 'Resumen del Pedido',
                       children: [
-                        _DetailRow(icon: Icons.person_outline, label: 'Cliente', value: pedido.clienteNombre),
-                        _DetailRow(icon: Icons.cake_outlined, label: 'Postre', value: pedido.postreNombre),
+                        _DetailRow(
+                          icon: Icons.person_outline,
+                          label: 'Cliente',
+                          value: pedido.clienteNombre,
+                        ),
+                        _DetailRow(
+                          icon: Icons.cake_outlined,
+                          label: 'Postre',
+                          value: pedido.postreNombre,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
                     _InfoCard(
                       title: 'Detalles de Entrega',
                       children: [
-                        _DetailRow(icon: Icons.calendar_today, label: 'Fecha de Entrega', value: _formatDate(pedido.fechaEntrega)),
+                        _DetailRow(
+                          icon: Icons.calendar_today,
+                          label: 'Fecha de Entrega',
+                          value: _formatDate(pedido.fechaEntrega),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
                     _InfoCard(
                       title: 'Costo y Cantidad',
                       children: [
-                        _DetailRow(icon: Icons.shopping_bag_outlined, label: 'Cantidad', value: pedido.cantidad.toString()),
-                        _DetailRow(icon: Icons.attach_money, label: 'Total', value: NumberFormat.simpleCurrency(locale: 'es_MX').format(pedido.total), isValueBold: true),
+                        _DetailRow(
+                          icon: Icons.shopping_bag_outlined,
+                          label: 'Cantidad',
+                          value: pedido.cantidad.toString(),
+                        ),
+                        _DetailRow(
+                          icon: Icons.attach_money,
+                          label: 'Total',
+                          value: NumberFormat.simpleCurrency(
+                            locale: 'es_MX',
+                          ).format(pedido.total),
+                          isValueBold: true,
+                        ),
                       ],
                     ),
                     if (pedido.nota != null && pedido.nota!.isNotEmpty)
@@ -124,7 +191,14 @@ class _PedidoCompletoDetailScreenState extends State<PedidoCompletoDetailScreen>
                         padding: const EdgeInsets.only(top: 16.0),
                         child: _InfoCard(
                           title: 'Notas Adicionales',
-                          children: [_DetailRow(icon: Icons.notes_outlined, label: 'Nota', value: pedido.nota!, isSingle: true)],
+                          children: [
+                            _DetailRow(
+                              icon: Icons.notes_outlined,
+                              label: 'Nota',
+                              value: pedido.nota!,
+                              isSingle: true,
+                            ),
+                          ],
                         ),
                       ),
                   ],
@@ -141,31 +215,55 @@ class _PedidoCompletoDetailScreenState extends State<PedidoCompletoDetailScreen>
     if (dateString == null || dateString.isEmpty) return 'N/A';
     try {
       final dateTime = DateTime.parse(dateString).toLocal();
-      return DateFormat('EEEE, dd MMMM yyyy, hh:mm a', 'es_MX').format(dateTime);
+      return DateFormat(
+        'EEEE, dd MMMM yyyy, hh:mm a',
+        'es_MX',
+      ).format(dateTime);
     } catch (e) {
       return dateString;
     }
   }
 
   void _editPedido(PedidoCompletoModel pedido) async {
-    final result = await Navigator.of(context).pushNamed(PedidoCompletoEditScreen.routeName, arguments: pedido);
+    final result = await Navigator.of(
+      context,
+    ).pushNamed(PedidoCompletoEditScreen.routeName, arguments: pedido);
     if (result == true && mounted) {
       _refreshPedidoDetails();
-      ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(const SnackBar(content: Text('Pedido actualizado'), backgroundColor: Colors.green));
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Pedido actualizado'),
+            backgroundColor: Colors.green,
+          ),
+        );
     }
   }
 
   void _deletePedido(PedidoCompletoModel pedido) async {
     final bool? confirmDelete = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmar Eliminación'),
-        content: Text('¿Estás seguro de que quieres eliminar el pedido #${pedido.id}?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancelar')),
-          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Eliminar', style: TextStyle(color: Colors.red))),
-        ],
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirmar Eliminación'),
+            content: Text(
+              '¿Estás seguro de que quieres eliminar el pedido #${pedido.id}?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text(
+                  'Eliminar',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
     );
 
     if (confirmDelete == true && mounted) {
@@ -177,12 +275,20 @@ class _PedidoCompletoDetailScreenState extends State<PedidoCompletoDetailScreen>
       } on DioException catch (e) {
         final messenger = ScaffoldMessenger.of(context);
         messenger.removeCurrentSnackBar();
-        String errorMessage = e.response?.data?['message'] ?? 'Error al eliminar el pedido.';
-        messenger.showSnackBar(SnackBar(content: Text(errorMessage), backgroundColor: Colors.red));
+        String errorMessage =
+            e.response?.data?['message'] ?? 'Error al eliminar el pedido.';
+        messenger.showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
       } catch (e) {
         final messenger = ScaffoldMessenger.of(context);
         messenger.removeCurrentSnackBar();
-        messenger.showSnackBar(SnackBar(content: Text('Un error inesperado ocurrió: $e'), backgroundColor: Colors.red));
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Un error inesperado ocurrió: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -203,7 +309,14 @@ class _InfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFE91E63))),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFE91E63),
+              ),
+            ),
             const Divider(height: 20, thickness: 1),
             ...children,
           ],
@@ -220,14 +333,21 @@ class _DetailRow extends StatelessWidget {
   final bool isValueBold;
   final bool isSingle;
 
-  const _DetailRow({required this.icon, required this.label, required this.value, this.isValueBold = false, this.isSingle = false});
+  const _DetailRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.isValueBold = false,
+    this.isSingle = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: isSingle ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment:
+            isSingle ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
           Icon(icon, color: Colors.grey[600], size: 20),
           const SizedBox(width: 16),
@@ -235,9 +355,25 @@ class _DetailRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (!isSingle) Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54)),
+                if (!isSingle)
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black54,
+                    ),
+                  ),
                 if (!isSingle) const SizedBox(height: 2),
-                Text(value, style: TextStyle(fontSize: 16, color: isValueBold ? const Color(0xFF333333) : Colors.black87, fontWeight: isValueBold ? FontWeight.bold : FontWeight.normal)),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color:
+                        isValueBold ? const Color(0xFF333333) : Colors.black87,
+                    fontWeight:
+                        isValueBold ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
               ],
             ),
           ),

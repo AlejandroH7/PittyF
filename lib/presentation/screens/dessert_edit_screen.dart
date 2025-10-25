@@ -47,7 +47,10 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Error: No se proporcionaron datos del postre.'), backgroundColor: Colors.red),
+            const SnackBar(
+              content: Text('Error: No se proporcionaron datos del postre.'),
+              backgroundColor: Colors.red,
+            ),
           );
           Navigator.of(context).pop();
         }
@@ -78,7 +81,10 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
         await _dessertsApi.updateDessert(_initialDessert.id, dessertRequest);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Postre actualizado exitosamente!'), backgroundColor: Colors.green),
+            const SnackBar(
+              content: Text('Postre actualizado exitosamente!'),
+              backgroundColor: Colors.green,
+            ),
           );
           Navigator.of(context).pop(true);
         }
@@ -86,7 +92,8 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
         if (mounted) {
           String errorMessage = 'Error al actualizar el postre.';
           if (e.response?.statusCode == 409) {
-            errorMessage = 'Este postre no se puede editar porque pertenece a un pedido.';
+            errorMessage =
+                'Este postre no se puede editar porque pertenece a un pedido.';
           }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
@@ -95,7 +102,10 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error inesperado: $e'), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text('Error inesperado: $e'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       } finally {
@@ -114,14 +124,25 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Editar Postre', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Editar Postre',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
       body: Stack(
         children: [
-          Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-          Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+          Positioned(
+            top: -100,
+            right: -100,
+            child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+          ),
+          Positioned(
+            bottom: -150,
+            left: -150,
+            child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+          ),
           Form(
             key: _formKey,
             child: ListView(
@@ -133,7 +154,8 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
                   label: 'Nombre del Postre',
                   icon: Icons.cake_outlined,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Por favor ingresa el nombre';
+                    if (value == null || value.isEmpty)
+                      return 'Por favor ingresa el nombre';
                     return null;
                   },
                 ),
@@ -142,11 +164,20 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
                   controller: _precioController,
                   label: 'Precio',
                   icon: Icons.attach_money,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}$'))],
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'^\d+\.?\d{0,2}$'),
+                    ),
+                  ],
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Por favor ingresa el precio';
-                    if (double.tryParse(value) == null || double.parse(value) <= 0) return 'El precio debe ser mayor a 0';
+                    if (value == null || value.isEmpty)
+                      return 'Por favor ingresa el precio';
+                    if (double.tryParse(value) == null ||
+                        double.parse(value) <= 0)
+                      return 'El precio debe ser mayor a 0';
                     return null;
                   },
                 ),
@@ -158,8 +189,10 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Por favor ingresa las porciones';
-                    if (int.tryParse(value) == null || int.parse(value) < 1) return 'Las porciones deben ser al menos 1';
+                    if (value == null || value.isEmpty)
+                      return 'Por favor ingresa las porciones';
+                    if (int.tryParse(value) == null || int.parse(value) < 1)
+                      return 'Las porciones deben ser al menos 1';
                     return null;
                   },
                 ),
@@ -167,7 +200,9 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
                 _buildSwitchTile(),
                 const SizedBox(height: 32),
                 if (_isLoading)
-                  const Center(child: CircularProgressIndicator(color: primaryColor))
+                  const Center(
+                    child: CircularProgressIndicator(color: primaryColor),
+                  )
                 else
                   Column(
                     children: [
@@ -181,7 +216,9 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
                             backgroundColor: primaryColor,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
                             elevation: 8,
                           ),
                         ),
@@ -189,7 +226,10 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text('Cancelar', style: TextStyle(color: primaryColor)),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(color: primaryColor),
+                        ),
                       ),
                     ],
                   ),
@@ -209,12 +249,21 @@ class _DessertEditScreenState extends State<DessertEditScreen> {
         border: Border.all(color: Colors.grey.shade300, width: 1.0),
       ),
       child: SwitchListTile(
-        title: const Text('Postre Activo', style: TextStyle(fontWeight: FontWeight.w500)),
-        subtitle: Text(_activo ? 'Visible para pedidos' : 'Oculto para pedidos', style: const TextStyle(color: Colors.grey)),
+        title: const Text(
+          'Postre Activo',
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
+        subtitle: Text(
+          _activo ? 'Visible para pedidos' : 'Oculto para pedidos',
+          style: const TextStyle(color: Colors.grey),
+        ),
         value: _activo,
         onChanged: (bool value) => setState(() => _activo = value),
         activeColor: const Color(0xFFE91E63),
-        secondary: const Icon(Icons.visibility_outlined, color: Color(0xFFE91E63)),
+        secondary: const Icon(
+          Icons.visibility_outlined,
+          color: Color(0xFFE91E63),
+        ),
       ),
     );
   }

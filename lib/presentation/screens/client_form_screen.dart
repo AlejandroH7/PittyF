@@ -34,7 +34,10 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
 
       final clientRequest = ClientRequestModel(
         nombre: _nombreController.text,
-        telefono: _telefonoController.text.isNotEmpty ? _telefonoController.text : null,
+        telefono:
+            _telefonoController.text.isNotEmpty
+                ? _telefonoController.text
+                : null,
         notas: _notasController.text.isNotEmpty ? _notasController.text : null,
       );
 
@@ -42,14 +45,20 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
         await _clientsApi.createClient(clientRequest);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Cliente creado exitosamente!'), backgroundColor: Colors.green),
+            const SnackBar(
+              content: Text('Cliente creado exitosamente!'),
+              backgroundColor: Colors.green,
+            ),
           );
           Navigator.of(context).pop(true);
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error al crear cliente: $e'), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text('Error al crear cliente: $e'),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       } finally {
@@ -68,14 +77,25 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('Nuevo Cliente', style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Nuevo Cliente',
+          style: TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
       body: Stack(
         children: [
-          Positioned(top: -100, right: -100, child: _Circle(color: primaryColor.withAlpha(10), size: 300)),
-          Positioned(bottom: -150, left: -150, child: _Circle(color: primaryColor.withAlpha(15), size: 400)),
+          Positioned(
+            top: -100,
+            right: -100,
+            child: _Circle(color: primaryColor.withAlpha(10), size: 300),
+          ),
+          Positioned(
+            bottom: -150,
+            left: -150,
+            child: _Circle(color: primaryColor.withAlpha(15), size: 400),
+          ),
           Form(
             key: _formKey,
             child: ListView(
@@ -87,8 +107,10 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                   label: 'Nombre',
                   icon: Icons.person_outline,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Por favor ingresa el nombre';
-                    if (value.length > 120) return 'El nombre no debe exceder 120 caracteres';
+                    if (value == null || value.isEmpty)
+                      return 'Por favor ingresa el nombre';
+                    if (value.length > 120)
+                      return 'El nombre no debe exceder 120 caracteres';
                     return null;
                   },
                 ),
@@ -98,7 +120,10 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                   label: 'Teléfono',
                   icon: Icons.phone_outlined,
                   keyboardType: TextInputType.phone,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(30)],
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(30),
+                  ],
                 ),
                 const SizedBox(height: 24),
                 _buildTextFormField(
@@ -109,7 +134,9 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                 ),
                 const SizedBox(height: 32),
                 if (_isLoading)
-                  const Center(child: CircularProgressIndicator(color: primaryColor))
+                  const Center(
+                    child: CircularProgressIndicator(color: primaryColor),
+                  )
                 else
                   Column(
                     children: [
@@ -123,7 +150,9 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                             backgroundColor: primaryColor,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
                             elevation: 8,
                           ),
                         ),
@@ -131,7 +160,10 @@ class _ClientFormScreenState extends State<ClientFormScreen> {
                       const SizedBox(height: 12),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text('Cancelar', style: TextStyle(color: primaryColor)),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(color: primaryColor),
+                        ),
                       ),
                     ],
                   ),

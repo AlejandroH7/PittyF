@@ -46,7 +46,11 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
     if (_clientId == null) {
       return Scaffold(
         backgroundColor: backgroundColor,
-        appBar: AppBar(title: const Text('Error'), backgroundColor: primaryColor, foregroundColor: Colors.white),
+        appBar: AppBar(
+          title: const Text('Error'),
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+        ),
         body: const Center(child: Text('ID de cliente no proporcionado.')),
       );
     }
@@ -54,27 +58,45 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
     return FutureBuilder<ClientModel>(
       future: _clientDetailFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting &&
+            !snapshot.hasData) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: const Center(child: CircularProgressIndicator(color: primaryColor)),
+            appBar: AppBar(
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: const Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            ),
           );
         }
 
         if (snapshot.hasError) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(title: const Text('Error'), backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: Center(child: Text('Error al cargar el cliente: ${snapshot.error}')),
+            appBar: AppBar(
+              title: const Text('Error'),
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: Center(
+              child: Text('Error al cargar el cliente: ${snapshot.error}'),
+            ),
           );
         }
 
         if (!snapshot.hasData) {
           return Scaffold(
             backgroundColor: backgroundColor,
-            appBar: AppBar(title: const Text('No Encontrado'), backgroundColor: primaryColor, foregroundColor: Colors.white),
-            body: const Center(child: Text('No se encontraron detalles del cliente.')),
+            appBar: AppBar(
+              title: const Text('No Encontrado'),
+              backgroundColor: primaryColor,
+              foregroundColor: Colors.white,
+            ),
+            body: const Center(
+              child: Text('No se encontraron detalles del cliente.'),
+            ),
           );
         }
 
@@ -91,13 +113,33 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                 backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Text(client.nombre, style: const TextStyle(fontFamily: 'Georgia', fontWeight: FontWeight.bold)),
+                  title: Text(
+                    client.nombre,
+                    style: const TextStyle(
+                      fontFamily: 'Georgia',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   background: Stack(
                     fit: StackFit.expand,
                     children: [
                       Container(color: primaryColor.withAlpha(50)),
-                      Positioned(top: -50, left: -50, child: _Circle(color: Colors.white.withAlpha(20), size: 200)),
-                      Positioned(bottom: -80, right: -80, child: _Circle(color: Colors.white.withAlpha(25), size: 300)),
+                      Positioned(
+                        top: -50,
+                        left: -50,
+                        child: _Circle(
+                          color: Colors.white.withAlpha(20),
+                          size: 200,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: -80,
+                        right: -80,
+                        child: _Circle(
+                          color: Colors.white.withAlpha(25),
+                          size: 300,
+                        ),
+                      ),
                       Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -106,8 +148,14 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                               radius: 50,
                               backgroundColor: Colors.white,
                               child: Text(
-                                client.nombre.isNotEmpty ? client.nombre[0].toUpperCase() : '?',
-                                style: const TextStyle(fontSize: 50, color: primaryColor, fontWeight: FontWeight.bold),
+                                client.nombre.isNotEmpty
+                                    ? client.nombre[0].toUpperCase()
+                                    : '?',
+                                style: const TextStyle(
+                                  fontSize: 50,
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -118,8 +166,14 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                   ),
                 ),
                 actions: [
-                  IconButton(icon: const Icon(Icons.edit), onPressed: () => _editClient(client)),
-                  IconButton(icon: const Icon(Icons.delete), onPressed: () => _deleteClient(client)),
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () => _editClient(client),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => _deleteClient(client),
+                  ),
                 ],
               ),
               SliverToBoxAdapter(
@@ -130,25 +184,54 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
                       _InfoCard(
                         title: 'Información de Contacto',
                         children: [
-                          _DetailRow(icon: Icons.phone, label: 'Teléfono', value: client.telefono ?? 'N/A'),
+                          _DetailRow(
+                            icon: Icons.phone,
+                            label: 'Teléfono',
+                            value: client.telefono ?? 'N/A',
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       _InfoCard(
                         title: 'Notas',
                         children: [
-                          _DetailRow(icon: Icons.notes, label: 'Notas', value: client.notas ?? 'Sin notas', isSingle: true),
+                          _DetailRow(
+                            icon: Icons.notes,
+                            label: 'Notas',
+                            value: client.notas ?? 'Sin notas',
+                            isSingle: true,
+                          ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       _InfoCard(
                         title: 'Información del Sistema',
                         children: [
-                          _DetailRow(icon: Icons.fingerprint, label: 'ID de Cliente', value: client.id.toString()),
-                          _DetailRow(icon: Icons.person_outline, label: 'Creado por', value: client.createdBy ?? 'N/A'),
-                          _DetailRow(icon: Icons.calendar_today_outlined, label: 'Fecha de Creación', value: _formatDate(client.createdAt)),
-                          _DetailRow(icon: Icons.person, label: 'Actualizado por', value: client.updatedBy ?? 'N/A'),
-                          _DetailRow(icon: Icons.calendar_today, label: 'Última Actualización', value: _formatDate(client.updatedAt)),
+                          _DetailRow(
+                            icon: Icons.fingerprint,
+                            label: 'ID de Cliente',
+                            value: client.id.toString(),
+                          ),
+                          _DetailRow(
+                            icon: Icons.person_outline,
+                            label: 'Creado por',
+                            value: client.createdBy ?? 'N/A',
+                          ),
+                          _DetailRow(
+                            icon: Icons.calendar_today_outlined,
+                            label: 'Fecha de Creación',
+                            value: _formatDate(client.createdAt),
+                          ),
+                          _DetailRow(
+                            icon: Icons.person,
+                            label: 'Actualizado por',
+                            value: client.updatedBy ?? 'N/A',
+                          ),
+                          _DetailRow(
+                            icon: Icons.calendar_today,
+                            label: 'Última Actualización',
+                            value: _formatDate(client.updatedAt),
+                          ),
                         ],
                       ),
                     ],
@@ -173,44 +256,72 @@ class _ClientDetailScreenState extends State<ClientDetailScreen> {
   }
 
   void _editClient(ClientModel client) async {
-    final result = await Navigator.of(context).pushNamed(
-      '/clientes/editar',
-      arguments: client,
-    );
+    final result = await Navigator.of(
+      context,
+    ).pushNamed('/clientes/editar', arguments: client);
     if (result == true && mounted) {
       _refreshClientDetails();
-      ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(const SnackBar(content: Text('Cliente actualizado'), backgroundColor: Colors.green));
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Cliente actualizado'),
+            backgroundColor: Colors.green,
+          ),
+        );
     }
   }
 
   void _deleteClient(ClientModel client) async {
     final bool? confirmDelete = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmar Eliminación'),
-        content: Text('¿Estás seguro de que quieres eliminar a ${client.nombre}?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancelar')),
-          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Eliminar', style: TextStyle(color: Colors.red))),
-        ],
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Confirmar Eliminación'),
+            content: Text(
+              '¿Estás seguro de que quieres eliminar a ${client.nombre}?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text(
+                  'Eliminar',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
     );
 
     if (confirmDelete == true && mounted) {
       try {
         await _clientsApi.deleteClient(client.id);
         if (mounted) {
-          Navigator.of(context).pop(true); // Pop back to list and indicate success
+          Navigator.of(
+            context,
+          ).pop(true); // Pop back to list and indicate success
         }
       } on DioException catch (e) {
         final messenger = ScaffoldMessenger.of(context);
         messenger.removeCurrentSnackBar();
-        String errorMessage = e.response?.data?['message'] ?? 'Error al eliminar cliente.';
-        messenger.showSnackBar(SnackBar(content: Text(errorMessage), backgroundColor: Colors.red));
+        String errorMessage =
+            e.response?.data?['message'] ?? 'Error al eliminar cliente.';
+        messenger.showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
       } catch (e) {
         final messenger = ScaffoldMessenger.of(context);
         messenger.removeCurrentSnackBar();
-        messenger.showSnackBar(SnackBar(content: Text('Un error inesperado ocurrió: $e'), backgroundColor: Colors.red));
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('Un error inesperado ocurrió: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
@@ -231,7 +342,14 @@ class _InfoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFE91E63))),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFE91E63),
+              ),
+            ),
             const Divider(height: 20, thickness: 1),
             ...children,
           ],
@@ -247,14 +365,20 @@ class _DetailRow extends StatelessWidget {
   final String value;
   final bool isSingle;
 
-  const _DetailRow({required this.icon, required this.label, required this.value, this.isSingle = false});
+  const _DetailRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.isSingle = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        crossAxisAlignment: isSingle ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment:
+            isSingle ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
           Icon(icon, color: Colors.grey[600], size: 20),
           const SizedBox(width: 16),
@@ -262,9 +386,19 @@ class _DetailRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (!isSingle) Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black54)),
+                if (!isSingle)
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black54,
+                    ),
+                  ),
                 if (!isSingle) const SizedBox(height: 2),
-                Text(value, style: const TextStyle(fontSize: 16, color: Colors.black87)),
+                Text(
+                  value,
+                  style: const TextStyle(fontSize: 16, color: Colors.black87),
+                ),
               ],
             ),
           ),
